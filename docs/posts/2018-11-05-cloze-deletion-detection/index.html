@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.253">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Stefan Eng">
+<meta name="dcterms.date" content="2018-11-05">
+
+<title>stefanengineering.comV3 - Cloze Deletion Prediction with LSTM Neural Networks</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">stefanengineering.comV3</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Cloze Deletion Prediction with LSTM Neural Networks</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">machine-learning</div>
+                <div class="quarto-category">project</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Stefan Eng </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 5, 2018</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>A cloze deletion test is a form of language test where a sentence (or paragraph) is given to the test taker with blanks for missing words <span class="citation" data-cites="clozeproc">[<a href="#ref-clozeproc" role="doc-biblioref">7</a>]</span>. The student is expected to fill in a “correct” word in the blanks.</p>
+<p>Example from Wikipedia’s article on cloze deletion <span class="citation" data-cites="wiki:clozetest">[<a href="#ref-wiki:clozetest" role="doc-biblioref">8</a>]</span>:</p>
+<blockquote class="blockquote">
+<p>Today, I went to the ____ and bought some milk and eggs.</p>
+</blockquote>
+<p>Some of the possible answers to fill in would be store, market, farm, etc.</p>
+<p>Cloze deletion tests can be useful for language learners. These type of flashcards are described in great detail in Gabriel Wyner’s book, Fluent Forever <span class="citation" data-cites="fluentforever">[<a href="#ref-fluentforever" role="doc-biblioref">11</a>]</span>. The idea is to include a cloze deletion sentence, definition, a picture, other possibly relevant information (part of speech, conjugation, etc.). An example of these flash cards can be seen in Figure <a href="#fig:flashcard" data-reference-type="ref" data-reference="fig:flashcard">1</a> on page .</p>
+<p><img src="../../post/2018-11-05-cloze-deletion-detection_files/cloze_example.png" class="img-fluid"></p>
+<p>After using this method of studying for some time, I have found that certain sentences work better than other for remembering new vocabulary and grammar. Long sentences tended to be difficult to remember and were not as useful as I would tend to only look at a few words around the missing word. Cards that had a personal association were much easier to recall. Good definitions (simple and short but descriptive) helped as well.</p>
+<p>In this paper I explore various machine learning approaches to predicting cloze deletion sentences from two Swedish news sources. The goals for this paper were to answer the following questions:</p>
+<ul>
+<li><p>Can we predict missing word using only the words around it?</p></li>
+<li><p>What sentences are good example sentences?</p>
+<ul>
+<li>Does length of sentence make a difference?</li>
+</ul></li>
+<li><p>Where are good sources to find cloze deletion sentences?</p></li>
+</ul>
+<p>I compare the difference between an LSTM (Long-Short term memory) neural network with that of a Bidirectional LSTM. Later the two news sources (described in Section&nbsp;<a href="#sec:datasets" data-reference-type="ref" data-reference="sec:datasets">2</a>) are compared to see which data set is easier to predict. Then I explore tuning the dropout parameter to see how overfitting can be improved. Finally the predictions are analyzed to see which sentences are easy to predict.</p>
+</section>
+<section id="data-sets" class="level1">
+<h1>Data Sets</h1>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../post/2018-11-05-cloze-deletion-detection_files/word_count_density.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Sentence Word Count Density for 8 Sidor and Göteborgs-Posten 2013</figcaption><p></p>
+</figure>
+</div>
+<p>The data from Språkbanken comes in XML form <span class="citation" data-cites="spraakbanken">[<a href="#ref-spraakbanken" role="doc-biblioref">4</a>]</span>. The two data sets I compared were 8 Sidor (from 2002/11/14 to 2017/10/09) and Göteborgs-Posten (from 2013). 8 Sidor and Göteborgs-Posten differ in their goals as news sites. 8 Sidor describe itself on its website as “en nyhetstidning på lättläst svenska.” <span class="citation" data-cites="8sidor">[<a href="#ref-8sidor" role="doc-biblioref">1</a>]</span>, which means that it is a newspaper in easy to read Swedish. We can see this reflected in the Part-of-speech Count Summary Table. Göteborgs-Posten (GP) is a more traditional <span class="citation" data-cites="wiki:gp">[<a href="#ref-wiki:gp" role="doc-biblioref">10</a>]</span>. Example sentence from the two 8 Sidor is,</p>
+<blockquote class="blockquote">
+<p>Julian Assange säger att han kan gå med på att komma till Sverige och träffa svenska poliser.</p>
+</blockquote>
+<p>and an example from Göteborgs-Posten is</p>
+<blockquote class="blockquote">
+<p>I morgon är det ett år sedan Wikileaks-grundaren Julian Assange klev in på Ecuadors ambassad i London på flykt undan de svenska brottsutredarna.</p>
+</blockquote>
+<p>We can see from this example that Göteborgs-Posten uses more complex sentence structures and more advanced vocabulary. This is also reflected in the word count usage as seen in Sentence Word Count Density plot.. Göteborgs-Posten has a higher density of sentences with more words. In general, longer sentences are often more complex grammatically.</p>
+<table class="table">
+<caption>Part-of-speech Count Summary</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: left;">GP2013</th>
+<th style="text-align: left;">8Sidor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>JJ</td>
+<td style="text-align: left;">35377</td>
+<td style="text-align: left;">4661</td>
+</tr>
+<tr class="even">
+<td>VB</td>
+<td style="text-align: left;">42729</td>
+<td style="text-align: left;">9215</td>
+</tr>
+<tr class="odd">
+<td>NN</td>
+<td style="text-align: left;">291292</td>
+<td style="text-align: left;">39844</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="data-processing" class="level1">
+<h1>Data Processing</h1>
+<p>For exploration of the data, the Göteborgs-Posten – Två Dagar (Two Days) data set was use which is a smaller example to start with. The data set contains scrambled sentences from various text issues which are tagged with an issue id. The first step was to build a data set with the raw sentence. Python’s built in XML package was for this step. Sentences were joined from the <em>w</em> (word) tags and part of speech tags were retained as well. There were occasionally multiple sentences that were found in the same text tag. These were kept as separate sentences at first but could be joined. Punctuation was also removed from the sentences. The available fields from Språkbanken data sets can be seen in the table below</p>
+<table class="table">
+<caption>Språkbanken Metadata</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Ordattribut (id)</th>
+<th style="text-align: left;">Lokalisering: svenska</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">word</td>
+<td style="text-align: left;">ord</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pos</td>
+<td style="text-align: left;">ordklass</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">msd</td>
+<td style="text-align: left;">msd</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lemma</td>
+<td style="text-align: left;">saknas</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lex</td>
+<td style="text-align: left;">Lemgram</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sense</td>
+<td style="text-align: left;">betydelse</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">prefix</td>
+<td style="text-align: left;">förled</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">suffix</td>
+<td style="text-align: left;">efterled</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">compwf</td>
+<td style="text-align: left;">sammansatta ordformer</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">complemgram</td>
+<td style="text-align: left;">sammansatta lemgram</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ref</td>
+<td style="text-align: left;">ref</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dephead</td>
+<td style="text-align: left;">dephead</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">deprel</td>
+<td style="text-align: left;">dependensrelation</td>
+</tr>
+</tbody>
+</table>
+<p>For the analysis, the 8 Sidor data set was used (number of sentences was <span class="math inline">\(n = 254,711\)</span>). Then, <span class="math inline">\(n\)</span> sentences were sampled from Göteborgs-Posten 2013. This was done so that each data set had approximately the same number of sentences so that we can compare the results fairly.</p>
+<section id="data_processing" class="level2">
+<h2 class="anchored" data-anchor-id="data_processing">Creating Training Examples</h2>
+<p>Each sentence is divided into potentially many training examples. For each noun, adjective, or verb in a sentence a window around the word was selected. If we let define the window <span class="math inline">\(k\)</span>, and a sentence is defined as <span class="math inline">\(s = (w_0,\ldots, w_n)\)</span> where <span class="math inline">\(w_i\)</span> is a word in the sentence (excluding punctuation). Then for a word <span class="math inline">\(w_i\)</span>, we use <span class="math inline">\((w_{i-k},\ldots,w_{i-1},w_{i+1},\ldots,w_{i + k})\)</span> to try to predict <span class="math inline">\(w_i\)</span>. The before window is pre-padded with zeros when there are not three words found before the target word. The after window is post-padded with zeros. For all of the experiments a window size of 3 was used to predict the words.</p>
+</section>
+</section>
+<section id="comparing-lstm-and-bidirectional-lstm" class="level1">
+<h1>Comparing LSTM and Bidirectional LSTM</h1>
+<p>The first experiment I ran was to compare the results of a standard LSTM and Bidirection LSTM. Keras is used to create the neural networks in this paper <span class="citation" data-cites="keras">[<a href="#ref-keras" role="doc-biblioref">2</a>]</span>. The hypothesis was that a bidirectional LSTM would provide better results because of the natural forward and backward context for the word. For example, compare the two sentence below that have the same start but end very differently. The standard LSTM feeds the sequence in in one direction and does not have access to the later data. The bidirectional LSTM feeds in both directions which allows for use of the future data.</p>
+<p>I went to the <span class="math inline">\(\rule{1cm}{0.15mm}\)</span> and bought some milk and eggs.</p>
+<p>I went to the <span class="math inline">\(\rule{1cm}{0.15mm}\)</span> and swam 10 laps.</p>
+<p>Using a bidirectional LSTM will allow the model to use the information from later in the sequence which could potentially improve the performance on sentences like this example. <span class="citation" data-cites="ngcoursera">[<a href="#ref-ngcoursera" role="doc-biblioref">5</a>]</span></p>
+<p><img src="../../post/2018-11-05-cloze-deletion-detection_files/RNN_BRNN.png" class="img-fluid"></p>
+<section id="sec:model_config" class="level2">
+<h2 class="anchored" data-anchor-id="sec:model_config">Model Configuration</h2>
+<p>For the first test, the 8 Sidor data set was used (number of sentences was <span class="math inline">\(259,216\)</span>.) A 30% validation set was used which resulted in <span class="math inline">\(202,687\)</span> validation samples. Keras was used to implement the neural network <span class="citation" data-cites="keras">[<a href="#ref-keras" role="doc-biblioref">2</a>]</span>. A window size of 3 was used with <span class="math inline">\(10,000\)</span> word limit on the vocabulary. Only verbs, adjectives, and nouns were used as the prediction word. Any word out of vocabulary was replaced with <em>UNK</em>, and if the out of vocabulary word was found in either the before window, the word, or the after window the training example was discarded. This resulted in <span class="math inline">\(472,934\)</span> training examples.</p>
+<p><img src="../../post/2018-11-05-cloze-deletion-detection_files/atta_sample_lstm.png" class="img-fluid"> <img src="../../post/2018-11-05-cloze-deletion-detection_files/atta_sample_blstm.png" class="img-fluid"></p>
+<p>The models were identical apart from the LSTM layer being bidirectional. The before window and after window are first concatenated into a single layer. Then an embedding layer is used with an embedding size of 100. The LSTM layer has 50 units, with the default Keras parameters of activation being <span class="math inline">\(tanh\)</span>. There is a dropout of <span class="math inline">\(0.1\)</span> on both of the LSTM layers. The output layer has dimension <span class="math inline">\(10,000 + 1\)</span> (the additional <span class="math inline">\(+1\)</span> is to include the out of vocabulary token), with a softmax activation. The models were trained with the <em>Adam</em> optimizer with 30 epochs and batch size 64. The loss function is categorical cross entropy. The categorical cross entropy is a sum of each of the individual cross entropy results for each category <span class="citation" data-cites="wiki:crossentropy">[<a href="#ref-wiki:crossentropy" role="doc-biblioref">9</a>]</span>. <span class="math display">\[H(y, \hat{y}) - \frac{1}{n} \sum_{i = 1}^{n} \sum_{j = 1}^{m} y_{i,j} \log(\hat{y}_{i,j})\]</span> Where <span class="math inline">\(y\)</span> is a vector of the true values, and <span class="math inline">\(\hat{y}\)</span> are our predictions. We define <span class="math inline">\(n\)</span> as the number of examples, <span class="math inline">\(m\)</span> as the number of categories and <span class="math inline">\(y_{i,j}\)</span> as the <span class="math inline">\(i\)</span>th example with category <span class="math inline">\(j\)</span>. We only have one non-zero value of <span class="math inline">\(y_{i,j}\)</span> for each <span class="math inline">\(i\)</span>. So we can re-write this as <span class="math display">\[H(y, \hat{y}) - \frac{1}{n} \sum_{i = 1}^{n} y_{i,c} \log(\hat{y}_{i,c})\]</span> where <span class="math inline">\(c\)</span> is the only non-zero category for training example <span class="math inline">\(i\)</span> since we do not have more than one category.</p>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../post/2018-11-05-cloze-deletion-detection_files/blstm_compare_loss.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Comparing cross-entropy loss between LSTM and Bidirectional LSTM Models</figcaption><p></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../post/2018-11-05-cloze-deletion-detection_files/blstm_compare_acc.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Comparing accuracy loss between LSTM and Bidirectional LSTM Models</figcaption><p></p>
+</figure>
+</div>
+<p>We can see the Bidirectional LSTM model performs much better than the LSTM model on the training data. It also performs a little bit better on the validation data. From these plots we can see that both the models are over fitting but the Bidirectional LSTM model is over fitting more so than the standard LSTM model.</p>
+</section>
+</section>
+<section id="improving-overfitting" class="level1">
+<h1>Improving Overfitting</h1>
+<p>One way to reduce overfitting is to use dropout. Dropout removes random nodes from a neural network while training to prevent the network from learning too much from the noise in the dataset <span class="citation" data-cites="dropout_srivastava">[<a href="#ref-dropout_srivastava" role="doc-biblioref">6</a>]</span>. In the LSTM and Bidirectional LSTM comparison a dropout of <span class="math inline">\(0.1\)</span> was used for the inputs to the LSTM. To combat overfitting, the Bidirectional LSTM model model was compared with dropout rates <span class="math inline">\(0.2\)</span></p>
+<section id="dropout-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="dropout-comparison">Dropout Comparison</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../post/2018-11-05-cloze-deletion-detection_files/dropout_compare_plot.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Comparing dropout values of 0.2, 0.4, 0.6 and 0.8 on Bidirectional LSTM Model</figcaption><p></p>
+</figure>
+</div>
+<p>Using the Bidirectional LSTM model described in the <a href="#sec:model_config" data-reference-type="ref" data-reference="sec:model_config">Model Config Section</a>, an experiment was set up to see how dropout parameter affected the results on the model. All models has the Bidirectional LSTM Layer configured with the dropout set to the value <span class="math inline">\(d = 0.2, 0.4, 0.6, 0.8\)</span>. The models were all run with 25 epochs (<span class="math inline">\(0,\ldots,24\)</span>) that took about 300 seconds for each epoch. The recurrent dropout is also set to the same <span class="math inline">\(d\)</span> value. As described in <span class="citation" data-cites="recurrent_dropout">[<a href="#ref-recurrent_dropout" role="doc-biblioref">3</a>]</span>, the recurrent dropout randomly drops recurrent connection within the LSTM. The normal dropout parameter randomly drops the inputs and output into and out of the LSTM layer.</p>
+<table class="table">
+<caption>Comparing minimum loss across different dropout parameters</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Dropout</th>
+<th style="text-align: right;">Minimum Loss</th>
+<th style="text-align: right;">Minimum Loss Epoch</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">3.374</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">3.342</td>
+<td style="text-align: right;">23</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">3.451</td>
+<td style="text-align: right;">23</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.8</td>
+<td style="text-align: right;">3.824</td>
+<td style="text-align: right;">24</td>
+</tr>
+</tbody>
+</table>
+<p>We can see that with dropout set to <span class="math inline">\(0.2\)</span>, that the difference between the validation loss and the training loss is very high. The validation loss also starts to increase after epoch 7. The minimum value achieve was at epoch 7, with a categorical cross entropy of 3.374. For the other dropout values 0.4, 0.6, and 0.8 the minimum loss was 3.342, 3.451, and 3.824.</p>
+<p>We can see as the dropout value increases, the training loss and validation loss are closer together, indicating less overfitting. When using a higher value of dropout, the model tends to converge slower. That is, we need more epochs to reach the same loss level. Both dropout of <span class="math inline">\(0.6\)</span> and <span class="math inline">\(0.8\)</span>, but especially dropout of <span class="math inline">\(0.8\)</span> could have been run for much longer to see where the loss converges to.</p>
+</section>
+</section>
+<section id="prediction-analysis" class="level1">
+<h1>Prediction Analysis</h1>
+<p>The model we trained on 8 Sidor data was used to find sentences that the model predicted very well. First the model was used to predict the missing values. Then the cross entropy was computed for each training example.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../post/2018-11-05-cloze-deletion-detection_files/cross_entropy_word_count.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Average Cross Entropy for each word count group</figcaption><p></p>
+</figure>
+</div>
+<p>The points <span class="math inline">\((x,y)\)</span> represent the mean cross entropy of each sentence that has a word count of <span class="math inline">\(x\)</span>. The bars represent the standard deviation within the each word count group. We can see from this graph that very short sentences are hard to predict (<span class="math inline">\(x &lt; 5\)</span>) as well as large sentences (<span class="math inline">\(x &gt; 25\)</span>).</p>
+<section id="best-prediction-examples" class="level2">
+<h2 class="anchored" data-anchor-id="best-prediction-examples">Best Prediction Examples</h2>
+<table class="table">
+<caption>Best prediction examples for 8 Sidor data set</caption>
+<colgroup>
+<col style="width: 23%">
+<col style="width: 76%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Word</th>
+<th style="text-align: left;">Sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">initiativ</td>
+<td style="text-align: left;">Partiet Feministiskt initiativ ställer upp i valet till EUs riksdag , Europaparlamentet .</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">eurovision</td>
+<td style="text-align: left;">Sanna Nielsen från Sverige sjöng i musiktävlingen Eurovision Song Contest , ESC , på tisdagen .</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">champions</td>
+<td style="text-align: left;">Malmö FF förlorade även den andra matchen mot Juventus i Champions League i fotboll .</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">fredspris</td>
+<td style="text-align: left;">Liu Xiaobo från Kina får Nobels fredspris i år .</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">eld</td>
+<td style="text-align: left;">Men muslimska ledare tror att någon tänt eld på huset .</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tv</td>
+<td style="text-align: left;">Rättegången kommer att sändas i TV 4 plus .</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">bin</td>
+<td style="text-align: left;">Usama bin Ladin är</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">förenta</td>
+<td style="text-align: left;">Förenta Nationernas organisation Barnfonden säger att det finns sextusen barnsoldater i Sudan i Afrika .</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">green</td>
+<td style="text-align: left;">Höjdhopparen Emma Green Tregaro har också en bra chans att ta medalj .</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sos</td>
+<td style="text-align: left;">Emil ringde till SOS Alarm för att bli hämtad av en ambulans .</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">för</td>
+<td style="text-align: left;">Centrum för lättläst får pengar av staten för att göra det .</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">vicepresident</td>
+<td style="text-align: left;">Det säger USAs vicepresident Joe Biden .</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">real</td>
+<td style="text-align: left;">Kampen står mellan Ronaldo från Real Madrid och Lionel Messi eller Andres Iniesta från Barcelona , tror experterna .</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">daglig</td>
+<td style="text-align: left;">Daglig verksamhet är inte ett jobb som du får lön för att göra .</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">röda</td>
+<td style="text-align: left;">Men nu stoppar både Röda Korset och FN hjälpen till de människor som är fast i Aleppo .</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">fängelse</td>
+<td style="text-align: left;">Han är misstänkt för spioneri och kan dömas till livstids fängelse i USA .</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">procent</td>
+<td style="text-align: left;">Bland eleverna är Miljöpartiet tredje största parti med nästan 15 procent av rösterna .</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">meter</td>
+<td style="text-align: left;">Susanna Kallur vann 100 meter häck vid en gala i Karlstad på onsdagen .</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">butikskedjan</td>
+<td style="text-align: left;">Fabian Bengtsson är chef för butikskedjan Siba som säljer elektronik .</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">alarm</td>
+<td style="text-align: left;">Företaget SOS Alarm har fått hård kritik den senaste tiden .</td>
+</tr>
+</tbody>
+</table>
+<p>We can see the predictions from the model which had the lowest cross entropy. Many of these top predicted words are parts of proper nouns or named entities which is fairly obvious because these words don’t appear in other contexts on their own.</p>
+<p>Some notable example from this list that would be good cloze deletion example are: <em>initiativ, eld, fängelse, procent, meter</em>.</p>
+<ul>
+<li><p>Partiet Feministiskt <strong>initiativ</strong> ställer upp i valet till EUs riksdag, Europaparlamentet.</p></li>
+<li><p>Men muslimska ledare tror att någon tänt <strong>eld</strong> på huset. (Good in the sense that goes together frequently)</p></li>
+<li><p>Han är misstänkt för spioneri och kan dömas till livstids <strong>fängelse</strong> i USA.</p></li>
+<li><p>Bland eleverna är Miljöpartiet tredje största parti med nästan 15 <strong>procent</strong> av rösterna.</p></li>
+<li><p>Susanna Kallur vann 100 <strong>meter</strong> häck vid en gala i Karlstad på onsdagen.</p></li>
+</ul>
+<p>For future work, removing these named entities would potentially be better for a language learner. We can also see from these example sentences that when named entities are found within the window that the predictions are very high. For example, for predicting <em>initiativ</em>, the proceeding words <em>Partiet Feministiskt</em> are likely not seen anywhere else in the data set. These type of examples can be good for a learner that has a connection in some way to <em>Partiet Feministiskt</em>, to learn the word for <em>initiativ</em>.</p>
+</section>
+</section>
+<section id="comparing-gp2013-and-8-sidor" class="level1">
+<h1>Comparing GP2013 and 8 Sidor</h1>
+<p>To create a fair comparison, a tokenizer was fit on the joined text from both data sets. The GP2013 data set is an sample equal in size to the full 8 Sidor data set. The vocabulary size was set to <span class="math inline">\(10,000\)</span>. For this comparison <span class="math inline">\(n = 44,981\)</span>, validating on <span class="math inline">\(19,278\)</span>. The reason this number is so much smaller when training only on 8 Sidor data is that the vocabulary is now much larger. As described in section <a href="#data_processing" data-reference-type="ref" data-reference="data_processing">3.1</a>, the training examples are not used if there is an <em>UNK</em> token found in the window or the prediction word. Since the total number of words in the vocabulary is larger, there will be many more words excluded. This results in a total smaller number of examples. While this is a rather small amount of data it is the same for both data sets so we can compare the results between them. The model is configured the same as described in the <a href="#sec:model_config" data-reference-type="ref" data-reference="sec:model_config">model config section</a>, but with dropout set to <span class="math inline">\(0.2\)</span>. The tokenizer was the same for each data set but the models are trained individually. The data was fit with 30 epochs.</p>
+<section id="results-1" class="level2">
+<h2 class="anchored" data-anchor-id="results-1">Results</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../post/2018-11-05-cloze-deletion-detection_files/compare_atta_gp_loss.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Comparing accuracy and cross-entropy loss between 8 Sidor and GP 2013</figcaption><p></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../post/2018-11-05-cloze-deletion-detection_files/compare_atta_gp_acc.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Comparing accuracy and cross-entropy loss between 8 Sidor and GP 2013</figcaption><p></p>
+</figure>
+</div>
+<p>The training loss decreasing fast for both data sets but the model overfits the training data. The loss for the Göteborgs-Posten data set actually starts to increase with the number of epochs. Overall, the model can predict better on the 8 Sidor data set than the data from Göteborgs-Posten 2013.</p>
+<p>These results are consistent with the original hypothesis. 8 Sidor’s intention is to create simple to read new articles without complicated sentence structure and words. Often readers of this newspaper are learners of the Swedish language. Göteborgs-Posten wants to be interesting to its audience, which has presumably a majority native Swedish speakers. The writers want to write in an interesting way to convey a message with a much broader vocabulary. This can be seen in the part of speech count summary table.</p>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>In this blog post I explored how we can predict cloze deletion sentences using recurrent (LSTM) neural networks. The bidirectional variant of LSTM was compared with a standard LSTM model. The dropout parameter was tuned through experiments on the 8 Sidor data set.</p>
+<p>The top predicted example sentences showed that proper nouns and named entities were the easiest for the network to predict. The length of the sentence did not play that much of a role, which is likely due to the window size selected. We showed that when comparing Göteborgs-Posten and 8 Sidor that the neural network had an easier time predicting the sentences from 8 Sidor. Using other preprocessing methods would be the greatest improvement to the process.</p>
+<p>While the results were not great in predicting, there is much potential for improve the model and exploring cloze deletion in more detail. Future work could include dictionary definitions as input the the neural network. Other hyperparameters could be tuned to make the network predict better. The training example creation stage could also be improved and filtering for named entities and proper noun would make the example sentences better. Using other data sources than news sources would potentially give better example sentences.</p>
+<section id="references" class="level2">
+
+
+
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-8sidor" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">[1] </div><div class="csl-right-inline">8 Sidor 2018. 8 sidor. <a href="http://8sidor.se" class="uri">http://8sidor.se</a>.</div>
+</div>
+<div id="ref-keras" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">[2] </div><div class="csl-right-inline">Chollet, F. et al. 2015. Keras. <a href="https://keras.io" class="uri">https://keras.io</a>.</div>
+</div>
+<div id="ref-recurrent_dropout" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">[3] </div><div class="csl-right-inline">Gal, Y. and Ghahramani, Z. 2016. <a href="http://dl.acm.org/citation.cfm?id=3157096.3157211">A theoretically grounded application of dropout in recurrent neural networks</a>. <em>Proceedings of the 30th international conference on neural information processing systems</em> (USA, 2016), 1027–1035.</div>
+</div>
+<div id="ref-spraakbanken" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">[4] </div><div class="csl-right-inline">Göteborgs universitet 2018. Språkbanken. <a href="https://spraakbanken.gu.se" class="uri">https://spraakbanken.gu.se</a>.</div>
+</div>
+<div id="ref-ngcoursera" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">[5] </div><div class="csl-right-inline">Ng, A. 2018. Sequence models – <span>Coursera</span>. <a href="https://www.coursera.org/learn/nlp-sequence-models" class="uri">https://www.coursera.org/learn/nlp-sequence-models</a>.</div>
+</div>
+<div id="ref-dropout_srivastava" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">[6] </div><div class="csl-right-inline">Srivastava, N. et al. 2014. <a href="http://jmlr.org/papers/v15/srivastava14a.html">Dropout: A simple way to prevent neural networks from overfitting</a>. <em>Journal of Machine Learning Research</em>. 15, (2014), 1929–1958.</div>
+</div>
+<div id="ref-clozeproc" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">[7] </div><div class="csl-right-inline">Taylor, W.L. 1953. <span>“Cloze procedure”</span>: A new tool for measuring readability. <em>Journalism Bulletin</em>. 30, 4 (1953), 415–433. DOI:https://doi.org/<a href="https://doi.org/10.1177/107769905303000401">10.1177/107769905303000401</a>.</div>
+</div>
+<div id="ref-wiki:clozetest" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">[8] </div><div class="csl-right-inline">Wikipedia contributors 2018. Cloze test — <span>Wikipedia</span><span>,</span> the free encyclopedia. <a href="https://en.wikipedia.org/w/index.php?title=Cloze_test&amp;oldid=847324700" class="uri">https://en.wikipedia.org/w/index.php?title=Cloze_test&amp;oldid=847324700</a>.</div>
+</div>
+<div id="ref-wiki:crossentropy" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">[9] </div><div class="csl-right-inline">Wikipedia contributors 2018. <a href="https://en.wikipedia.org/w/index.php?title=Cross_entropy&amp;oldid=864650073">Cross entropy — <span>Wikipedia</span><span>,</span> the free encyclopedia</a>.</div>
+</div>
+<div id="ref-wiki:gp" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">[10] </div><div class="csl-right-inline">Wikipedia contributors 2018. Göteborgs-posten — <span>Wikipedia</span><span>,</span> the free encyclopedia. <a href="https://en.wikipedia.org/w/index.php?title=G%C3%B6teborgs-Posten&amp;oldid=865127708" class="uri">https://en.wikipedia.org/w/index.php?title=G%C3%B6teborgs-Posten&amp;oldid=865127708</a>.</div>
+</div>
+<div id="ref-fluentforever" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">[11] </div><div class="csl-right-inline">Wyner, G. 2014. <em>Fluent forever: How to learn any language fast and never forget it</em>. Harmony Books.</div>
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

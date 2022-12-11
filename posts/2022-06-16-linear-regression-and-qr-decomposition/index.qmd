@@ -1,0 +1,200 @@
+---
+title: Linear Regression and QR decomposition
+author: Stefan Eng
+date: '2022-06-16'
+slug: linear-regression-and-qr-decomposition
+categories:
+  - statistics
+  - R
+  - math
+tags:
+  - R
+draft: yes
+output:
+  html: default
+  blogdown::html_page:
+    toc: no
+    fig_width: 5
+    fig_height: 5
+link-citations: yes
+csl: ../../static/bibtex/acm-sig-proceedings.csl
+bibliography: ../../static/bibtex/linearmodeling.bib
+---
+
+
+```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
+## Load frequently used packages for blog posts
+library(sessioninfo) # for session_info()
+
+## For R images to display well in the RSS feed (disable for local preview)
+# knitr::opts_knit$set(base.url = 'stefanengineering.com/post/')
+
+# Don't show code by default
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, comment = NA, message = FALSE)
+knitr::opts_knit$set(global.par = TRUE)
+```
+
+## Setup
+```{r}
+library(tidyverse)
+library(here)
+
+# CB Palette like ESL
+cbPalette <- c(
+  "#999999", "#E69F00", "#56B4E9", "#009E73",
+  "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# Set the theme
+theme_set(
+  theme_minimal(base_size = 15, base_family = "Arial") %+replace%
+    theme(plot.caption = element_text(size = 9, color = "gray50", hjust=1))
+)
+```
+
+## Introduction
+Most of this content was taken from [@wood_gam_book]
+
+## QR Decomposition
+Any real-valued matrix $X$ ($n \times p$) can be decomposed as
+$$
+X = Q_f R = Q\begin{bmatrix}R\\0\end{bmatrix}
+$$
+where $Q$ is an $n \times n$ orthogonal matrix. In the alternate formulation, $Q_f$ is the first $p$ columns of $Q$, so $Q_f$ is $n \times p$ with orthogonal columns. $R$ is a $p \times p$ upper triangular matrix such that $R_{i,j} = 0$ if $i > j$.
+Some of the nice properties about these matrices are that 
+
+$$
+\begin{aligned}
+Q^T &= Q^{-1}\\
+Q^T Q &= Q Q^T = I_{n}\\
+Q_f^T Q_f &= I_{p}\\
+Q u \cdot Q v &= u \cdot v && \text{for } u,v \in R^{n}\\
+\| Q u \| &= \| u \| && \text{for all } u \in R^{n}
+\end{aligned}
+$$
+
+## Length is preserved
+Assume $Q$ is a $n \times n$ orthogonal matrix and $v$ is a $n \times 1$ vector. Then,
+
+$$
+\begin{aligned}
+\|Q v \| &= Qv \cdot Qv\\
+&= (Qv)^T Qv\\
+&= v Q^T Q v\\
+&= v \cdot v\\
+&= \|v \|
+\end{aligned}
+$$
+
+## Why use QR Decomposition?
+
+The standard estimator for the coefficients is easy enough to derive
+$$
+\hat{\beta} = (X^T X)^{-1} X^T y
+$$
+
+Inverting matrices can be unstable and fail when attempting to invert using R.
+This can occur if the columns are completely different scales.
+
+```{r}
+mu <- 1e7
+X0 <- cbind(rnorm(10, mean = mu, sd = 100), rnorm(10))
+X <- cbind(1, X0)
+y <- rnorm(10)
+# solve(t(X) %*% X)
+tryCatch(
+  expr = solve(crossprod(X)),
+  error = function(e) {
+    print(e)
+    warning(e)
+  }
+)
+
+# crossprod(apply(X0, 2, scale))
+# kappa(crossprod(X))
+# kappa(apply(X0, 2, scale))
+
+print(chol2inv(chol(crossprod(X))))
+print(chol2inv(qr.R(qr(X))))
+```
+
+## Results
+$$
+\begin{aligned}
+\hat{\beta} &= R^{-1} f
+\end{aligned}
+$$
+
+## Assorted Problems
+
+### Residuals
+From problem 1.6 from Wood's GAM book:
+
+$$
+X^T \hat{\mu} = X^T y
+$$
+
+What implications does this have for the residuals of a model which includes an intercept term?
+
+From section on 'The influence matrix':
+
+$\mathbf{Q}_f$ is first $p$ columns of $\mathbf{Q}, f = \mathbf{Q}_f y$ so
+$$
+\hat{\beta} = \mathbf{R}^{-1}\mathbf{Q}_f^T y
+$$
+Then,
+$$
+\begin{aligned}
+X^T \hat{\mu} &= X^T X \hat{\beta}\\
+&= X^T X R^{-1} Q_f^T y\\
+&= X^T Q_f R R^{-1} Q_f^T y\\
+&= X^T Q_f Q_f^T y && \\
+&= (Q_f R)^T Q_f Q_f^T y\\
+&= R^T Q_f^T Q_f Q_f^T y\\
+&= R^T Q_f^T y\\
+&= (Q_f R)^T y\\
+&= X^T y\\
+\end{aligned}
+$$
+
+Note that $Q_f$ is only semi-orthogonal so $Q_f Q_f^T = A$ the influence matrix, is actually the orthogonal projection onto the column space of $Q_f$.
+
+What does this mean for the residuals which includes an intercept term?
+
+Since $\hat{\epsilon} = \hat{\mu} - y$, then
+$$
+\begin{aligned}
+X^T \hat{\epsilon} = X^T\hat{\mu} - X^T y &= 0\\
+\begin{bmatrix}
+1 & 1 & \cdots & 1\\
+x_{11} & x_{21} & \cdots & x_{n1}\\
+x_{12} & x_{22} & \cdots & x_{n2}\\
+\vdots & \ddots & & \\
+x_{1p} & x_{2p} & \cdots & x_{np}
+\end{bmatrix}
+\begin{bmatrix}
+\hat{\epsilon}_1 & \hat{\epsilon}_2 & \cdots & \hat{\epsilon}_n
+\end{bmatrix}^{T} &=
+\begin{bmatrix}
+\hat{\epsilon}_1 + \hat{\epsilon}_2 + \cdots + \hat{\epsilon}_n\\
+x_{11} \hat{\epsilon}_1 + x_{21} \hat{\epsilon}_2 + \cdots + x_{n1} \hat{\epsilon}_n\\
+\ldots\\
+x_{1p}\hat{\epsilon}_1 + x_{2p} \hat{\epsilon}_2 + \cdots + x_{np} \hat{\epsilon}_n\
+\end{bmatrix} = 0
+\end{aligned}
+$$
+
+This means that if we have an intercept, then the residuals need to sum to zero:
+
+$$
+\sum_{i = 1}^n \hat{\epsilon}_i = 0
+$$
+
+## References
+
+## Reproducibility
+
+```{r reproducibility, echo = FALSE}
+## Reproducibility info
+options(width = 120)
+session_info()
+```

@@ -1,5 +1,5 @@
 ---
-title: "stefanengineering.comV3"
+title: "stefanengineering.com"
 listing:
   contents: posts
   sort: "date desc"

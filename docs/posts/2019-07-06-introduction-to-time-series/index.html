@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.253">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Stefan Eng">
+<meta name="dcterms.date" content="2019-07-06">
+
+<title>stefanengineering.comV3 - Introduction to Time Series</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">stefanengineering.comV3</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Introduction to Time Series</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">statistics</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Stefan Eng </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">July 6, 2019</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<div class="cell">
+
+</div>
+<section id="classical-decomposition-model" class="level2">
+<h2 class="anchored" data-anchor-id="classical-decomposition-model">Classical decomposition model</h2>
+<p><span class="math display">\[
+X_t = m_t + s_t + y_y
+\]</span> where - <span class="math inline">\(m : \mathbb{Z} \rightarrow \mathbb{R}\)</span> is a slowly changing function, the trend component. - <span class="math inline">\(s : \mathbb Z \rightarrow \mathbb R\)</span> is a function with a known period <span class="math inline">\(d\)</span>, i.e., <span class="math inline">\(s_{t + d} = s_t\)</span> for all <span class="math inline">\(t \in \mathbb Z\)</span> and <span class="math inline">\(\sum_{j = 1}^d s_j = 0\)</span>, is called the seasonal component. - <span class="math inline">\((y_t, t \in \mathbb Z)\)</span> is a stationary stochastic process.</p>
+</section>
+<section id="time-series-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="time-series-analysis">Time Series Analysis</h2>
+<ul>
+<li>Always plot the data first
+<ul>
+<li>If there are clear sections in the data, it might be good to analyze each section separately</li>
+</ul></li>
+</ul>
+</section>
+<section id="best-linear-predictor" class="level2">
+<h2 class="anchored" data-anchor-id="best-linear-predictor">Best Linear Predictor</h2>
+<p>Let <span class="math inline">\((X_t, t \in \Z)\)</span> be a time series with <span class="math inline">\(Var(X_t) &lt; \infty\)</span> for <span class="math inline">\(t \in \Z\)</span> and <span class="math inline">\(X^n := (X_{t_1},\ldots, X_{t_n})\)</span> be a collection of random variables of the time series at <span class="math inline">\(n\)</span> different times. Then the _best linear predictor of <span class="math inline">\(X_t\)</span> is given by <span class="math display">\[
+b_t^l(X^n) = a_0 + a_1 X_{t_n} + \cdots + a_n X_{t_1}
+\]</span> where the coefficients are determined by the linear equations</p>
+<ol type="1">
+<li><span class="math inline">\(E(X_t - b_t^l(X^n)) = 0\)</span></li>
+<li><span class="math inline">\(E(X_{t_j}(X_t - b_t^l(X^n))) = 0\)</span> for all <span class="math inline">\(j = 1,\ldots,n\)</span>.</li>
+</ol>
+<p>If X is stationary, with mean <span class="math inline">\(\mu\)</span> and autocovariance function <span class="math inline">\(\gamma\)</span>, the coefficients are determined by <span class="math display">\[
+a_0 = \mu (1 - \sum_{i = 1}^n a_i)
+\]</span> and <span class="math display">\[
+(\gamma(t_{n + 1 - j} - t_{n + 1 - i}))_{i,j = 1}^n (a_1,\ldots,a_n)^T = (\gamma(t - t_n),\ldots, \gamma(t - t_1))^T
+\]</span></p>
+<p>The mean square error is:</p>
+<p><span class="math display">\[
+MSE(b_t^l(X^n), X_t) = E[(b_t^l(X^n) - X_t)^2] = \gamma(0) - (a_1, \ldots, a_n)(\gamma(t - t_n), \ldots, \gamma(t - t_1))^T
+\]</span></p>
+<p>Note: when <span class="math inline">\(X^n := (X_1, \ldots, X_n)\)</span> then the coefficients <span class="math inline">\((a_0,\ldots,a_n)\)</span> for prediction of <span class="math inline">\(X_{n + h}\)</span> and <span class="math display">\[
+(\gamma(i - j)_{i,j = 1}^n) (a_1,\ldots, a_n)^T = (\gamma(h), \ldots, \gamma(h + n - 1))^T
+\]</span></p>
+<section id="example" class="level3">
+<h3 class="anchored" data-anchor-id="example">Example</h3>
+<p>The notation <span class="math inline">\(t_1,\ldots, t_n\)</span> was confusing to me at first. A good example that shown how it works is if we have an <span class="math inline">\(AR(1)\)</span> process, <span class="math display">\[
+X_t - \phi_1 X_{t - 1} = Z_t
+\]</span> Assume that we observe values at <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_3\)</span>, but are missing a value for <span class="math inline">\(X_2\)</span>. We then have <span class="math inline">\(t_1 = 1\)</span>, <span class="math inline">\(t_2 = 3\)</span>, with <span class="math inline">\(n = 2\)</span>. We want to find: <span class="math display">\[
+b_2^l(X^1,X^3) = a_0 + a_1 X_3 + a_2 X_1
+\]</span> We have that <span class="math inline">\(a_0 = 0\)</span>, since the process has mean zero. It then follows that,</p>
+<p><span class="math display">\[
+\begin{aligned}
+  \begin{pmatrix}
+    \gamma(t_{3 + 1 - 1} - t_{3 + 1 - 1}) &amp; \gamma(t_{3 + 1 - 2} - t_{3 + 1 - 1})\\
+     \gamma(t_{3 + 1 - 1} - t_{3 + 1 - 2}) &amp;\gamma(t_{3 + 1 - 1} - t_{3 + 1 - 1})
+  \end{pmatrix}
+  \begin{pmatrix}
+    a_1\\
+    a_2
+  \end{pmatrix}
+  &amp;=
+  \begin{pmatrix}
+    \gamma(2 - t_{2})\\
+    \gamma(2 - t_{1})
+  \end{pmatrix}\\
+  \begin{pmatrix}
+    \gamma(0) &amp; \gamma(3 - 1)\\
+     \gamma(3 - 1) &amp;\gamma(0)
+  \end{pmatrix}
+  \begin{pmatrix}
+    a_1\\
+    a_2
+  \end{pmatrix}
+  &amp;=
+  \begin{pmatrix}
+    \gamma(2 - 3)\\
+    \gamma(2 - 1)
+  \end{pmatrix}\\
+  \begin{pmatrix}
+    1 &amp; \phi_1^2\\
+     \phi_1^2 &amp; 1
+  \end{pmatrix}
+  \begin{pmatrix}
+    a_1\\
+    a_2
+  \end{pmatrix}
+  &amp;=
+  \begin{pmatrix}
+    \phi_1\\
+    \phi_1
+  \end{pmatrix}
+\end{aligned}
+\]</span></p>
+<p>Which leads to a solution <span class="math display">\[
+a_1 = a_2 = \frac{\phi_1}{1 + \phi_1^2}
+\]</span></p>
+</section>
+</section>
+<section id="armapq" class="level2">
+<h2 class="anchored" data-anchor-id="armapq">ARMA(p,q)</h2>
+<p><span class="math inline">\(\{X_t\}\)</span> is an ARMA(p,q) process if <span class="math inline">\(\{X_t\}\)</span> is <em>stationary</em> and if for every <span class="math inline">\(t\)</span>, <span class="math display">\[
+X_t - \sum_{i = 1}^p \phi_i X_{t-i} = Z_t + \sum_{j = 1}^q \theta_j Z_{t - j}
+\]</span> where <span class="math inline">\(\{Z_t\} \sim WN(0, \sigma^2)\)</span> and the polynomials <span class="math inline">\((1 - \sum_{i = 1}^p \phi_i z^i)\)</span> and <span class="math inline">\((1 + \sum_{j = 1}^q \theta_j z^j)\)</span> have no common factors.</p>
+</section>
+<section id="causality" class="level2">
+<h2 class="anchored" data-anchor-id="causality">Causality</h2>
+<p>An ARMA(p,q) process <span class="math inline">\(\{X_t\}\)</span> is <em>causal</em>, if there exists constants <span class="math inline">\(\{\psi_t\}\)</span> such that <span class="math display">\[
+\sum_{j = 0}^\infty | \psi_{j} | &lt; \infty
+\]</span> and <span class="math display">\[
+X_t = \sum_{j = 0}^\infty \psi_{j} Z_{t - j}
+\]</span> for all <span class="math inline">\(t\)</span>. That is, if we can represent the ARMA(p,q) process <span class="math inline">\(\{X_t\}\)</span> as a <span class="math inline">\(MA(\infty)\)</span> process.</p>
+<p>How to actually check? Use the equivalent condition: <span class="math display">\[
+\phi(z) = 1 - \sum_{i = 1}^p \phi_i z^i \not = 0 \quad \text{for all}~|z| \leq 1
+\]</span> That is, that <span class="math inline">\(\phi(z)\)</span> has no roots <em>inside</em> (or that all root are outside the unit circle).</p>
+<section id="finding-causal-representation" class="level3">
+<h3 class="anchored" data-anchor-id="finding-causal-representation">Finding Causal Representation</h3>
+<p>To represent our (causal) ARMA(p,q) process in the form: <span class="math display">\[
+  X_t = \sum_{j = 0}^\infty \psi_j Z_{t - j}
+\]</span> The sequence of <span class="math inline">\(\{\psi_j\}\)</span> is determined by the relation <span class="math inline">\(\psi(z) = \sum_{j = 0}^\infty \psi_j z^j = \theta(z) / \phi(z)\)</span>, or equivalently: <span class="math display">\[
+\psi_j - \sum_{k = 1}^p \phi_k \psi_{j - k} = \theta_j, ~j = 0,1,\ldots
+\]</span> with <span class="math inline">\(\theta_0 := 1, \theta_j := 0\)</span> for j &gt; q and <span class="math inline">\(\psi_j := 0\)</span> for <span class="math inline">\(j &lt; 0\)</span>.</p>
+</section>
+<section id="finding-invertible-arinfty-representation" class="level3">
+<h3 class="anchored" data-anchor-id="finding-invertible-arinfty-representation">Finding invertible (AR(<span class="math inline">\(\infty\)</span>)) representation</h3>
+<p>To represent our invertible ARMA(p,q) process in the form: <span class="math display">\[
+Z_t = \sum_{j = 0}^\infty \pi_j X_{t - j}
+\]</span> we find <span class="math inline">\(\{\pi_j\}\)</span> by the equations <span class="math display">\[
+\pi_j + \sum_{k = 1}^q \theta_k \pi_{j - k} = -\phi_j, ~j = 0,1,\ldots,
+\]</span> where <span class="math inline">\(\phi_0 := -1,~ \phi_j := 0\)</span> for <span class="math inline">\(j &gt; p\)</span>, and <span class="math inline">\(\pi_j := 0\)</span> for <span class="math inline">\(j &lt; 0\)</span>.</p>
+</section>
+</section>
+<section id="model-building-for-arma-processes" class="level2">
+<h2 class="anchored" data-anchor-id="model-building-for-arma-processes">Model Building for ARMA processes</h2>
+<ul>
+<li>Remove trend and seasonality until you believe the dta can be modeled as a stationary time series.</li>
+<li>Identify the order of the ARMA process for the time series
+<ul>
+<li>Either look at ACF/PACF</li>
+<li>or by fitting (using maximum likelihood or Hannan-Rissanen estimation) sucessively higher order ARMA(p,q) to the data and choosing p, q to minimize either the AICC or BIC.</li>
+</ul></li>
+<li>Estimate the final model using maximum likelihood</li>
+<li>Compute the residuals <span class="math inline">\(\hat{R}_t\)</span> and check that they are consistent with the specified distribution and temporal covariance structure for <span class="math inline">\(Z_t\)</span>.
+<ul>
+<li>If they are, then the model is considered adequate for the data.</li>
+</ul></li>
+</ul>
+</section>
+<section id="autoregressive-processes---arp" class="level2">
+<h2 class="anchored" data-anchor-id="autoregressive-processes---arp">Autoregressive Processes - AR(p)</h2>
+<p><span class="math display">\[
+X_t - \sum_{j = 1}^p \phi_j X_{t - j} = Z_t
+\]</span></p>
+<ul>
+<li>AR(p) is not necessarily stationary!</li>
+</ul>
+<section id="ar1-example" class="level3">
+<h3 class="anchored" data-anchor-id="ar1-example">AR(1) Example</h3>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="ar2" class="level3">
+<h3 class="anchored" data-anchor-id="ar2">AR(2)</h3>
+<p>Can simulate using the function <code>astsa::arima.sim</code> function <span class="math display">\[
+X_t = Z_t + 0.7 \cdot X_{t - 1} + 0.2 \cdot X_{t - 2}
+\]</span></p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="moving-average-processes---maq" class="level2">
+<h2 class="anchored" data-anchor-id="moving-average-processes---maq">Moving Average Processes - MA(q)</h2>
+<p><span class="math display">\[
+X_t = Z_t + \sum_{j = 1}^q \theta_j Z_{t - j}
+\]</span> with <span class="math inline">\(Z_t \sim WN(0, \sigma^2)\)</span>. At lag greater than or equal to q, the ACF should be zero.</p>
+<section id="ma2-example" class="level3">
+<h3 class="anchored" data-anchor-id="ma2-example">MA(2) example</h3>
+<p><span class="math display">\[
+X_t = Z_t + 0.8 \cdot Z_{t - 1} + 0.2 \cdot Z_{t - 2}
+\]</span></p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The autocorrelation function</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="armapq-1" class="level2">
+<h2 class="anchored" data-anchor-id="armapq-1">ARMA(p,q)</h2>
+<ul>
+<li>The partial autocorrelation function PACF of an ARMA(p,q) process X can be thought of as the correlation between <span class="math inline">\(X_t\)</span> and <span class="math inline">\(X_{t + h}\)</span> when adjusting for the intervening observations <span class="math inline">\(X_{t + 1}, \ldots, X_{t + h - 1}\)</span>.
+<ul>
+<li>Can be used to detect seasonality: If you have monthly data and you see a big spike at <span class="math inline">\(\hat{\alpha}(12)\)</span>, it is likely that you see a periodic effect corresponding to a calendar year, so you should remove the seasonality.</li>
+</ul></li>
+</ul>
+<section id="acf-and-pacf" class="level3">
+<h3 class="anchored" data-anchor-id="acf-and-pacf">ACF and PACF</h3>
+<table class="table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 32%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Conditional Mean Model</th>
+<th>ACF</th>
+<th>PACF</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AR(p)</td>
+<td>Tails off gradually</td>
+<td>Cuts off after p lags</td>
+</tr>
+<tr class="even">
+<td>MA(q)</td>
+<td>Cuts off after q lags</td>
+<td>Tails off gradually</td>
+</tr>
+<tr class="odd">
+<td>ARMA(p,q)</td>
+<td>Tails off gradually</td>
+<td>Tails off gradually</td>
+</tr>
+</tbody>
+</table>
+<p>Source: https://se.mathworks.com/help/econ/autocorrelation-and-partial-autocorrelation.html</p>
+</section>
+</section>
+<section id="innovations-algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="innovations-algorithm">Innovations Algorithm</h2>
+<p>Used to compute the best linear predictor, <span class="math inline">\(b_{n + 1}^l(X^n)\)</span> more computationally efficiently than solving a system of <span class="math inline">\(n\)</span> linear equations. Can be applied to all time series with finite second moments. Assume we have a time series <span class="math inline">\((X_t, t \in \mathbb Z)\)</span> with zero mean, and finite second moment <span class="math inline">\(E[X_t^2] &lt; + \infty\)</span> for all <span class="math inline">\(t \in \mathbb Z\)</span> and covariance <span class="math display">\[
+Cov(X_i, X_j) = \kappa(i,j)
+\]</span> We denote the best linear one-step predictors as <span class="math display">\[
+\hat{X}_n := \begin{cases}
+  0 &amp; \text{for n = 1}\\
+  b_{n}^l(X^{n - 1}) &amp; \text{for n &gt; 1}
+\end{cases}
+\]</span> and the mean squared errors as <span class="math display">\[
+v_n := MSE(\hat{X}_{n+1}, X_{n + 1}) = E[(\hat{X}_{n + 1} - X_{n + 1})^2]
+\]</span></p>
+<p>There exists coefficients <span class="math inline">\((\theta_{ij}, 1 \leq j \leq i \leq n)\)</span> such that the best linear predictors satisfy <span class="math display">\[
+\hat{X}_{n + 1} = \begin{cases}
+  0 &amp; \text{for } n = 0\\
+  \sum_{j = 1}^n \theta_{nj}(X_{n + 1 - j} - \hat{X}_{n+1-j}) &amp; \text{for } n \geq 1
+\end{cases}
+\]</span> We compute the coefficients <span class="math inline">\(\theta_{n1},\ldots, \theta_{nn}\)</span> recursively from the equations <span class="math display">\[
+v_0 := \kappa(1,1)
+\]</span> and <span class="math display">\[
+\theta_{n (n - k)} := v_k^{-1} \left(
+  \kappa(n + 1, k + 1) - \sum_{j = 0}^{k - 1} \theta_{k (k - j)} \theta_{n (n - j)} v_j
+\right)
+\]</span></p>
+</section>
+<section id="garcharch" class="level2">
+<h2 class="anchored" data-anchor-id="garcharch">GARCH/ARCH</h2>
+<section id="conditional-maximum-likelihood" class="level3">
+<h3 class="anchored" data-anchor-id="conditional-maximum-likelihood">Conditional Maximum Likelihood</h3>
+<p>The MLEs <span class="math inline">\((\hat{\alpha}_0, \ldots, \hat{\alpha}_p, \hat{\beta}_1, \ldots, \hat{\alpha}_q, \hat{\theta}_Z)\)</span> are obtained by maximizing the <em>conditional likelihood function</em> <span class="math display">\[
+L(\alpha_0, \ldots, \alpha_p, \beta_1, \ldots, \alpha_q, \theta_Z) = \prod_{t = p + 1} \frac{1}{\sigma_t} f_Z \left( \frac{x_t}{\sigma_t}\right)
+\]</span> where <span class="math inline">\(f_Z\)</span> is the density of the white noise Z and <span class="math inline">\(\theta_Z\)</span> is any other parameter Z depends on (such as degrees of freedom if Z is t-distributed).</p>
+<p>It <span class="math inline">\(Z \sim IIDN(0,1)\)</span> then, <span class="math display">\[
+\begin{aligned}
+f_Z \left( \frac{x_t}{\sigma_t}\right) &amp;= \frac{1}{\sqrt{2\pi}} \exp\left( - \frac{X_t^2}{2 \sigma_t^2}\right)\\
+L(\alpha_0, \ldots, \alpha_p, \beta_1, \ldots, \alpha_q, \theta_Z) &amp;= \prod_{t = p + 1}^n \frac{1}{\sigma_t} \frac{1}{\sqrt{2\pi}} \exp\left( - \frac{X_t^2}{2 \sigma_t^2}\right)\\
+- \ln L(\alpha_0, \ldots, \alpha_p, \beta_1, \ldots, \alpha_q, \theta_Z) &amp;= \sum_{t = p + 1}^n \ln{\sigma_t} + \frac{1}{2} \ln(2\pi)as + \frac{1}{2} \frac{X_t^2}{\sigma_t^2}\\
+&amp;= \frac{1}{2} \sum_{t = p + 1}^n 2 \ln{\sigma_t} + \ln(2\pi) + \frac{X_t^2}{\sigma_t^2}\\
+&amp;= \frac{1}{2} \sum_{t = p + 1}^n \ln{\sigma_t^2} + \ln(2\pi) + \frac{X_t^2}{\sigma_t^2}
+\end{aligned}
+\]</span></p>
+</section>
+<section id="acknowledgements" class="level3">
+<h3 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h3>
+<p>This blog post was made possible thanks to:</p>
+<ul>
+<li><a id="cite-Xie_2017"></a>(<a href="https://bookdown.org/yihui/blogdown/">Xie, Hill, and Thomas, 2017</a>)</li>
+<li><a id="cite-Boettiger_2021"></a>(<a href="https://CRAN.R-project.org/package=knitcitations">Boettiger, 2021</a>)</li>
+<li><a id="cite-Wickham_2021"></a>(<a href="https://CRAN.R-project.org/package=sessioninfo">Wickham, Chang, Flight, Müller et al., 2021</a>)</li>
+</ul>
+</section>
+<section id="references" class="level3">
+<h3 class="anchored" data-anchor-id="references">References</h3>
+<p>
+<a id="bib-Boettiger_2021"></a><a href="#cite-Boettiger_2021">[1]</a><cite> C. Boettiger. <em>knitcitations: Citations for ‘Knitr’ Markdown Files</em>. R package version 1.0.12. 2021. URL: <a href="https://CRAN.R-project.org/package=knitcitations">https://CRAN.R-project.org/package=knitcitations</a>.</cite>
+</p>
+<p>
+<a id="bib-Wickham_2021"></a><a href="#cite-Wickham_2021">[2]</a><cite> H. Wickham, W. Chang, R. Flight, K. Müller, et al. <em>sessioninfo: R Session Information</em>. R package version 1.2.2. 2021. URL: <a href="https://CRAN.R-project.org/package=sessioninfo">https://CRAN.R-project.org/package=sessioninfo</a>.</cite>
+</p>
+<p>
+<a id="bib-Xie_2017"></a><a href="#cite-Xie_2017">[3]</a><cite> Y. Xie, A. P. Hill, and A. Thomas. <em>blogdown: Creating Websites with R Markdown</em>. ISBN 978-0815363729. Boca Raton, Florida: Chapman and Hall/CRC, 2017. URL: <a href="https://bookdown.org/yihui/blogdown/">https://bookdown.org/yihui/blogdown/</a>.</cite>
+</p>
+</section>
+<section id="reproducibility" class="level3">
+<h3 class="anchored" data-anchor-id="reproducibility">Reproducibility</h3>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>─ Session info ───────────────────────────────────────────────────────────────────────────────────────────────────────
+ setting  value
+ version  R version 4.2.1 (2022-06-23)
+ os       macOS Catalina 10.15.7
+ system   x86_64, darwin17.0
+ ui       X11
+ language (EN)
+ collate  en_US.UTF-8
+ ctype    en_US.UTF-8
+ tz       America/Los_Angeles
+ date     2022-12-11
+ pandoc   2.19.2 @ /Applications/RStudio.app/Contents/MacOS/quarto/bin/tools/ (via rmarkdown)
+
+─ Packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────
+ ! package       * version date (UTC) lib source
+ P assertthat      0.2.1   2019-03-21 [?] CRAN (R 4.2.0)
+ P backports       1.4.1   2021-12-13 [?] CRAN (R 4.2.0)
+ P bibtex          0.5.0   2022-09-25 [?] CRAN (R 4.2.0)
+ P cli             3.4.1   2022-09-23 [?] CRAN (R 4.2.0)
+ P colorspace      2.0-3   2022-02-21 [?] CRAN (R 4.2.0)
+ P DBI             1.1.3   2022-06-18 [?] CRAN (R 4.2.0)
+ P digest          0.6.31  2022-12-11 [?] CRAN (R 4.2.1)
+ P dplyr           1.0.10  2022-09-01 [?] CRAN (R 4.2.0)
+ P evaluate        0.18    2022-11-07 [?] CRAN (R 4.2.0)
+ P fansi           1.0.3   2022-03-24 [?] CRAN (R 4.2.0)
+ P fastmap         1.1.0   2021-01-25 [?] CRAN (R 4.2.0)
+ P generics        0.1.3   2022-07-05 [?] CRAN (R 4.2.0)
+ P ggplot2       * 3.4.0   2022-11-04 [?] CRAN (R 4.2.0)
+ P glue            1.6.2   2022-02-24 [?] CRAN (R 4.2.0)
+ P gtable          0.3.1   2022-09-01 [?] CRAN (R 4.2.0)
+ P htmltools       0.5.4   2022-12-07 [?] CRAN (R 4.2.0)
+ P htmlwidgets     1.5.4   2021-09-08 [?] CRAN (R 4.2.0)
+ P httr            1.4.4   2022-08-17 [?] CRAN (R 4.2.1)
+ P jsonlite        1.8.4   2022-12-06 [?] CRAN (R 4.2.1)
+ P knitcitations * 1.0.12  2021-01-10 [?] CRAN (R 4.2.0)
+ P knitr           1.41    2022-11-18 [?] CRAN (R 4.2.1)
+ P lifecycle       1.0.3   2022-10-07 [?] CRAN (R 4.2.0)
+ P lubridate       1.9.0   2022-11-06 [?] CRAN (R 4.2.0)
+ P magrittr        2.0.3   2022-03-30 [?] CRAN (R 4.2.0)
+ P munsell         0.5.0   2018-06-12 [?] CRAN (R 4.2.0)
+ P pillar          1.8.1   2022-08-19 [?] CRAN (R 4.2.0)
+ P pkgconfig       2.0.3   2019-09-22 [?] CRAN (R 4.2.0)
+ P plyr            1.8.8   2022-11-11 [?] CRAN (R 4.2.0)
+ P R6              2.5.1   2021-08-19 [?] CRAN (R 4.2.0)
+ P Rcpp            1.0.9   2022-07-08 [?] CRAN (R 4.2.0)
+ P RefManageR      1.4.0   2022-09-30 [?] CRAN (R 4.2.0)
+   renv            0.16.0  2022-09-29 [1] CRAN (R 4.2.0)
+ P rlang           1.0.6   2022-09-24 [?] CRAN (R 4.2.0)
+ P rmarkdown       2.18    2022-11-09 [?] CRAN (R 4.2.0)
+ P rstudioapi      0.14    2022-08-22 [?] CRAN (R 4.2.0)
+ P scales          1.2.1   2022-08-20 [?] CRAN (R 4.2.0)
+ P sessioninfo   * 1.2.2   2021-12-06 [?] CRAN (R 4.2.0)
+ P stringi         1.7.8   2022-07-11 [?] CRAN (R 4.2.0)
+ P stringr         1.5.0   2022-12-02 [?] CRAN (R 4.2.0)
+ P tibble          3.1.8   2022-07-22 [?] CRAN (R 4.2.0)
+ P tidyselect      1.2.0   2022-10-10 [?] CRAN (R 4.2.0)
+ P timechange      0.1.1   2022-11-04 [?] CRAN (R 4.2.0)
+ P utf8            1.2.2   2021-07-24 [?] CRAN (R 4.2.0)
+ P vctrs           0.5.1   2022-11-16 [?] CRAN (R 4.2.0)
+ P withr           2.5.0   2022-03-03 [?] CRAN (R 4.2.0)
+ P xfun            0.35    2022-11-16 [?] CRAN (R 4.2.0)
+ P xml2            1.3.3   2021-11-30 [?] CRAN (R 4.2.0)
+ P yaml            2.3.6   2022-10-18 [?] CRAN (R 4.2.0)
+
+ [1] /Users/stefaneng/personal_devel/stefanengineering.comV3/renv/library/R-4.2/x86_64-apple-darwin17.0
+ [2] /Users/stefaneng/personal_devel/stefanengineering.comV3/renv/sandbox/R-4.2/x86_64-apple-darwin17.0/84ba8b13
+
+ P ── Loaded and on-disk path mismatch.
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
