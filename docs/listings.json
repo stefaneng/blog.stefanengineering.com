@@ -2,8 +2,6 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/post-with-code/index.html",
-      "/posts/welcome/index.html",
       "/posts/2022-11-10-sum-of-uniform-random-variables-relation-to-e/index.html",
       "/posts/2020-05-17-joint-distribution-of-sums-of-exponential-random-variables/index.html",
       "/posts/2020-05-15-probability-of-even-using-probability-generating-functions/index.html",

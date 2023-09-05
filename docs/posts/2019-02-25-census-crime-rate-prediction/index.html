@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.253">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -19,14 +19,15 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
 }
-.hanging div.csl-entry {
+.hanging-indent div.csl-entry {
   margin-left:2em;
   text-indent:-2em;
 }
@@ -40,8 +41,7 @@ div.csl-right-inline {
 }
 div.csl-indent {
   margin-left: 2em;
-}
-</style>
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -76,13 +76,15 @@ div.csl-indent {
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
 <script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
@@ -99,27 +101,29 @@ div.csl-indent {
     <span class="navbar-title">stefanengineering.comV3</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../about.html">
+    <a class="nav-link" href="../../about.html" rel="" target="">
  <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/"><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/" rel="" target=""><i class="bi bi-github" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com"><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com" rel="" target=""><i class="bi bi-twitter" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
 </ul>
-              <div id="quarto-search" class="" title="Search"></div>
+            <div class="quarto-navbar-tools">
+</div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
@@ -168,9 +172,6 @@ div.csl-indent {
 
 
 
-<div class="cell">
-
-</div>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>We are considering a dataset that provides some demographic information for 440 of the most populous counties in the United States in years 1990-92. Each line of the dataset provides information on 14 variables for a single county. Counties with missing data were deleted from the dataset. We are building models to predict the number of crimes per 1000 people in each county. We first explore linear regression models and then a negative binomial regression model. We found that the best linear regression model performed similarly to the negative binomial regression model on the training and test set using the same variables.</p>
@@ -185,9 +186,6 @@ div.csl-indent {
 </section>
 <section id="models" class="level2">
 <h2 class="anchored" data-anchor-id="models">Models</h2>
-<div class="cell">
-
-</div>
 <section id="full-model" class="level3">
 <h3 class="anchored" data-anchor-id="full-model">Full Model</h3>
 <pre><code>crm1000 ~ percapitaarea + popul + pop1834 + pop65plus +
@@ -201,38 +199,38 @@ div.csl-indent {
 <p>These are the variables from which all the other models are based. We arrived at this model by keeping one variable from each correlation cluster that seemed to make the most intuitive sense to keep. We confirmed that this was a good model by starting with all of the variables and using backward selection to arrive at the identicial model that we had selected by hand. Then a partial F-test was performed, see table below. The F statistic was extremely small, which means that the residual sum of squares was almost the same after dropping the variables <code>pop65plus</code>, <code>percapitaphys</code>, <code>higrads</code>, <code>bachelors</code>, and <code>unemployed</code>. From this reduced model, we built up variations that involved transformations and interactions.</p>
 <div class="cell">
 <div class="cell-output-display">
-
-<table class="table" style="margin-left: auto; margin-right: auto;">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>Partial F-Test for Full model vs final model (without transformations)</caption>
- <thead>
-  <tr>
-   <th style="text-align:right;"> Res.Df </th>
-   <th style="text-align:right;"> RSS </th>
-   <th style="text-align:right;"> Df </th>
-   <th style="text-align:right;"> Sum of Sq </th>
-   <th style="text-align:right;"> F </th>
-   <th style="text-align:right;"> Pr(&gt;F) </th>
-  </tr>
- </thead>
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">Res.Df</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">RSS</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Df</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Sum of Sq</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">F</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pr(&gt;F)</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:right;"> 342 </td>
-   <td style="text-align:right;"> 143881.3 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 337 </td>
-   <td style="text-align:right;"> 143017.6 </td>
-   <td style="text-align:right;"> 5 </td>
-   <td style="text-align:right;"> 863.651 </td>
-   <td style="text-align:right;"> 0.407 </td>
-   <td style="text-align:right;"> 0.844 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: right;">342</td>
+<td style="text-align: right;">143881.3</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">337</td>
+<td style="text-align: right;">143017.6</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">863.651</td>
+<td style="text-align: right;">0.407</td>
+<td style="text-align: right;">0.844</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -283,91 +281,91 @@ VIF_i = \frac{1}{1 - R_i^2}
 \]</span> Where <span class="math inline">\(R_i^2\)</span> is the <span class="math inline">\(R^2\)</span> when using all other variables in a regression on variable <span class="math inline">\(i\)</span>. <span class="citation" data-cites="wiki:vif">[<a href="#ref-wiki:vif" role="doc-biblioref">4</a>]</span> We removed the variables for per capita income, the number of high school graduates, and the number of bachelor degree graduates based on the VIF results. The last column in the table shows how much the standard error of the variable is increased due to the collinearity. For example, for the bachelors variable the value of 2.834 means that the standard error for <span class="math inline">\(\beta_{bachelors}\)</span> is 2.834 larger than if the variables were not correlated with each other.</p>
 <div class="cell">
 <div class="cell-output-display">
-
-<table class="table" style="margin-left: auto; margin-right: auto;">
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> VIF </th>
-   <th style="text-align:right;"> DF </th>
-   <th style="text-align:right;"> VIF^(1/(2*Df)) </th>
-  </tr>
- </thead>
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">VIF</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">DF</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">VIF^(1/(2*Df))</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:left;"> bachelors </td>
-   <td style="text-align:right;"> 7.716 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 2.778 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> percapitaincome </td>
-   <td style="text-align:right;"> 5.490 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 2.343 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> higrads </td>
-   <td style="text-align:right;"> 5.022 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 2.241 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> poors </td>
-   <td style="text-align:right;"> 4.461 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 2.112 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> percapitabeds </td>
-   <td style="text-align:right;"> 3.582 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1.893 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> percapitaphys </td>
-   <td style="text-align:right;"> 3.435 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1.853 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> region </td>
-   <td style="text-align:right;"> 2.716 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 1.181 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> pop1834 </td>
-   <td style="text-align:right;"> 2.320 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1.523 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> unemployed </td>
-   <td style="text-align:right;"> 2.304 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1.518 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> pop65plus </td>
-   <td style="text-align:right;"> 2.146 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1.465 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> percapitaarea </td>
-   <td style="text-align:right;"> 1.563 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1.250 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> popul </td>
-   <td style="text-align:right;"> 1.245 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1.116 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: left;">bachelors</td>
+<td style="text-align: right;">7.716</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2.778</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">percapitaincome</td>
+<td style="text-align: right;">5.490</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2.343</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">higrads</td>
+<td style="text-align: right;">5.022</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2.241</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">poors</td>
+<td style="text-align: right;">4.461</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2.112</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">percapitabeds</td>
+<td style="text-align: right;">3.582</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.893</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">percapitaphys</td>
+<td style="text-align: right;">3.435</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.853</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">region</td>
+<td style="text-align: right;">2.716</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1.181</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pop1834</td>
+<td style="text-align: right;">2.320</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.523</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">unemployed</td>
+<td style="text-align: right;">2.304</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.518</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pop65plus</td>
+<td style="text-align: right;">2.146</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.465</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">percapitaarea</td>
+<td style="text-align: right;">1.563</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.250</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">popul</td>
+<td style="text-align: right;">1.245</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.116</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -381,75 +379,75 @@ VIF_i = \frac{1}{1 - R_i^2}
 <p>We explored and built models that included interactions between the variables. We found that while some of the interactions were significant, when doing cross validation the additive model without any interactions performed the best. Using the partial F-test, we compared the two interaction models with the additive model. For the interactions model with only region, we did not reject the null hypothesis at the <span class="math inline">\(\alpha = 0.05\)</span> level, as the p-value was 0.06. The value was close enough that we decided to continue to compare with this model as well. The results can be see in the table below. When we run a partial F-test on the interaction models with more interactions, we get a larger test statistic that allows us to reject the null hypothesis at the <span class="math inline">\(\alpha = 0.05\)</span> level.</p>
 <div class="cell">
 <div class="cell-output-display">
-
-<table class="table" style="margin-left: auto; margin-right: auto;">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>Partial F-test for region interactions model</caption>
- <thead>
-  <tr>
-   <th style="text-align:right;"> Res.Df </th>
-   <th style="text-align:right;"> RSS </th>
-   <th style="text-align:right;"> Df </th>
-   <th style="text-align:right;"> Sum of Sq </th>
-   <th style="text-align:right;"> F </th>
-   <th style="text-align:right;"> Pr(&gt;F) </th>
-  </tr>
- </thead>
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">Res.Df</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">RSS</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Df</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Sum of Sq</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">F</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pr(&gt;F)</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:right;"> 342 </td>
-   <td style="text-align:right;"> 121929.0 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 336 </td>
-   <td style="text-align:right;"> 117312.6 </td>
-   <td style="text-align:right;"> 6 </td>
-   <td style="text-align:right;"> 4616.4 </td>
-   <td style="text-align:right;"> 2.204 </td>
-   <td style="text-align:right;"> 0.042 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: right;">342</td>
+<td style="text-align: right;">121929.0</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">336</td>
+<td style="text-align: right;">117312.6</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">4616.4</td>
+<td style="text-align: right;">2.204</td>
+<td style="text-align: right;">0.042</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
-
-<table class="table" style="margin-left: auto; margin-right: auto;">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>Partial F-test for full interactions model</caption>
- <thead>
-  <tr>
-   <th style="text-align:right;"> Res.Df </th>
-   <th style="text-align:right;"> RSS </th>
-   <th style="text-align:right;"> Df </th>
-   <th style="text-align:right;"> Sum of Sq </th>
-   <th style="text-align:right;"> F </th>
-   <th style="text-align:right;"> Pr(&gt;F) </th>
-  </tr>
- </thead>
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">Res.Df</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">RSS</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Df</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Sum of Sq</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">F</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pr(&gt;F)</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:right;"> 342 </td>
-   <td style="text-align:right;"> 121929.0 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 326 </td>
-   <td style="text-align:right;"> 106585.4 </td>
-   <td style="text-align:right;"> 16 </td>
-   <td style="text-align:right;"> 15343.55 </td>
-   <td style="text-align:right;"> 2.933093 </td>
-   <td style="text-align:right;"> 0.00015 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: right;">342</td>
+<td style="text-align: right;">121929.0</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">326</td>
+<td style="text-align: right;">106585.4</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">15343.55</td>
+<td style="text-align: right;">2.933093</td>
+<td style="text-align: right;">0.00015</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -463,148 +461,145 @@ VIF_i = \frac{1}{1 - R_i^2}
 </section>
 <section id="model-interpretation" class="level2">
 <h2 class="anchored" data-anchor-id="model-interpretation">Model Interpretation</h2>
-<div class="cell">
-
-</div>
 <p>On the training data, we had an <span class="math inline">\(R^2\)</span> of 0.56 which means that 54.3% of the error is explained by our model. The <span class="math inline">\(R_{adj}^2\)</span> was 0.548.</p>
 <div class="cell">
 <div class="cell-output-display">
-
-<table>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> Estimate </th>
-   <th style="text-align:right;"> Std. Error </th>
-   <th style="text-align:right;"> Pr(&gt;|t|) </th>
-  </tr>
- </thead>
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Estimate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Std. Error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pr(&gt;|t|)</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:left;"> (Intercept) </td>
-   <td style="text-align:right;"> -360.441 </td>
-   <td style="text-align:right;"> 105.325 </td>
-   <td style="text-align:right;"> 0.001 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(percapitaarea) </td>
-   <td style="text-align:right;"> -5.346 </td>
-   <td style="text-align:right;"> 1.462 </td>
-   <td style="text-align:right;"> 0.000 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(popul) </td>
-   <td style="text-align:right;"> 6.490 </td>
-   <td style="text-align:right;"> 1.944 </td>
-   <td style="text-align:right;"> 0.001 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(pop1834) </td>
-   <td style="text-align:right;"> 19.330 </td>
-   <td style="text-align:right;"> 7.858 </td>
-   <td style="text-align:right;"> 0.014 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(percapitabeds) </td>
-   <td style="text-align:right;"> 4.351 </td>
-   <td style="text-align:right;"> 2.495 </td>
-   <td style="text-align:right;"> 0.082 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(poors) </td>
-   <td style="text-align:right;"> 25.918 </td>
-   <td style="text-align:right;"> 3.844 </td>
-   <td style="text-align:right;"> 0.000 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(percapitaincome) </td>
-   <td style="text-align:right;"> 22.224 </td>
-   <td style="text-align:right;"> 9.501 </td>
-   <td style="text-align:right;"> 0.020 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> regionnortheast </td>
-   <td style="text-align:right;"> -17.144 </td>
-   <td style="text-align:right;"> 3.863 </td>
-   <td style="text-align:right;"> 0.000 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> regionmidwest </td>
-   <td style="text-align:right;"> -9.936 </td>
-   <td style="text-align:right;"> 3.791 </td>
-   <td style="text-align:right;"> 0.009 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> regionsouth </td>
-   <td style="text-align:right;"> 4.436 </td>
-   <td style="text-align:right;"> 3.425 </td>
-   <td style="text-align:right;"> 0.196 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-360.441</td>
+<td style="text-align: right;">105.325</td>
+<td style="text-align: right;">0.001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(percapitaarea)</td>
+<td style="text-align: right;">-5.346</td>
+<td style="text-align: right;">1.462</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(popul)</td>
+<td style="text-align: right;">6.490</td>
+<td style="text-align: right;">1.944</td>
+<td style="text-align: right;">0.001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(pop1834)</td>
+<td style="text-align: right;">19.330</td>
+<td style="text-align: right;">7.858</td>
+<td style="text-align: right;">0.014</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(percapitabeds)</td>
+<td style="text-align: right;">4.351</td>
+<td style="text-align: right;">2.495</td>
+<td style="text-align: right;">0.082</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(poors)</td>
+<td style="text-align: right;">25.918</td>
+<td style="text-align: right;">3.844</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(percapitaincome)</td>
+<td style="text-align: right;">22.224</td>
+<td style="text-align: right;">9.501</td>
+<td style="text-align: right;">0.020</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">regionnortheast</td>
+<td style="text-align: right;">-17.144</td>
+<td style="text-align: right;">3.863</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">regionmidwest</td>
+<td style="text-align: right;">-9.936</td>
+<td style="text-align: right;">3.791</td>
+<td style="text-align: right;">0.009</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">regionsouth</td>
+<td style="text-align: right;">4.436</td>
+<td style="text-align: right;">3.425</td>
+<td style="text-align: right;">0.196</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
 <p>Let’s look at what these estimates actually mean. Since we are working on a log scale we can interpret the estimate <span class="math inline">\(\beta_{area}\)</span> for log(percapitaarea) as the change in crime rate per 1000, <span class="math inline">\(crm_{1000}\)</span>, when <span class="math inline">\(log(percapitaarea)\)</span> increases by 1. That is, <span class="math inline">\(\ln x_{area} + 1 = \ln(e \cdot x_{area})\)</span>. So if <span class="math inline">\(x_{area}\)</span> is <em>multiplied</em> by <span class="math inline">\(e \approx 2.718\)</span>, then <span class="math inline">\(crm_{1000}\)</span> increases by <span class="math inline">\(\beta_{area}\)</span>. It can be easier to interpret if we look at percentage increase instead of multiplying by <span class="math inline">\(e\)</span>. If the per captia area increases by 10%, then the crime rate per 1000 people will <em>decrease</em> by 0.49. <span class="math inline">\(\beta_{area} \cdot ln(1.10) = -5.127 \cdot ln(1.10) = -0.49\)</span>. This is summarized in the table</p>
 <div class="cell">
 <div class="cell-output-display">
-
-<table>
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
 <caption>Change in crime rate by percentage increase</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> 5% </th>
-   <th style="text-align:right;"> 10% </th>
-   <th style="text-align:right;"> 20% </th>
-   <th style="text-align:right;"> 30% </th>
-  </tr>
- </thead>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">5%</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">10%</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">20%</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">30%</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:left;"> percapitaarea </td>
-   <td style="text-align:right;"> -0.261 </td>
-   <td style="text-align:right;"> -0.510 </td>
-   <td style="text-align:right;"> -0.975 </td>
-   <td style="text-align:right;"> -1.403 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> popul </td>
-   <td style="text-align:right;"> 0.317 </td>
-   <td style="text-align:right;"> 0.619 </td>
-   <td style="text-align:right;"> 1.183 </td>
-   <td style="text-align:right;"> 1.703 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> pop1834 </td>
-   <td style="text-align:right;"> 0.943 </td>
-   <td style="text-align:right;"> 1.842 </td>
-   <td style="text-align:right;"> 3.524 </td>
-   <td style="text-align:right;"> 5.072 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> percapitabeds </td>
-   <td style="text-align:right;"> 0.212 </td>
-   <td style="text-align:right;"> 0.415 </td>
-   <td style="text-align:right;"> 0.793 </td>
-   <td style="text-align:right;"> 1.142 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> poors </td>
-   <td style="text-align:right;"> 1.265 </td>
-   <td style="text-align:right;"> 2.470 </td>
-   <td style="text-align:right;"> 4.725 </td>
-   <td style="text-align:right;"> 6.800 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> percapitaincome </td>
-   <td style="text-align:right;"> 1.084 </td>
-   <td style="text-align:right;"> 2.118 </td>
-   <td style="text-align:right;"> 4.052 </td>
-   <td style="text-align:right;"> 5.831 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: left;">percapitaarea</td>
+<td style="text-align: right;">-0.261</td>
+<td style="text-align: right;">-0.510</td>
+<td style="text-align: right;">-0.975</td>
+<td style="text-align: right;">-1.403</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">popul</td>
+<td style="text-align: right;">0.317</td>
+<td style="text-align: right;">0.619</td>
+<td style="text-align: right;">1.183</td>
+<td style="text-align: right;">1.703</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pop1834</td>
+<td style="text-align: right;">0.943</td>
+<td style="text-align: right;">1.842</td>
+<td style="text-align: right;">3.524</td>
+<td style="text-align: right;">5.072</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">percapitabeds</td>
+<td style="text-align: right;">0.212</td>
+<td style="text-align: right;">0.415</td>
+<td style="text-align: right;">0.793</td>
+<td style="text-align: right;">1.142</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">poors</td>
+<td style="text-align: right;">1.265</td>
+<td style="text-align: right;">2.470</td>
+<td style="text-align: right;">4.725</td>
+<td style="text-align: right;">6.800</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">percapitaincome</td>
+<td style="text-align: right;">1.084</td>
+<td style="text-align: right;">2.118</td>
+<td style="text-align: right;">4.052</td>
+<td style="text-align: right;">5.831</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -625,68 +620,68 @@ log(crimes) = log(popul/1000) + X\beta
 <h3 class="anchored" data-anchor-id="interpreting-results">Interpreting Results</h3>
 <div class="cell">
 <div class="cell-output-display">
-
-<table class="table" style="margin-left: auto; margin-right: auto;">
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> Estimate </th>
-   <th style="text-align:right;"> p-value </th>
-  </tr>
- </thead>
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Estimate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p-value</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:left;"> (Intercept) </td>
-   <td style="text-align:right;"> -3.262 </td>
-   <td style="text-align:right;"> 0.057 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(percapitaarea) </td>
-   <td style="text-align:right;"> -0.065 </td>
-   <td style="text-align:right;"> 0.006 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(popul) </td>
-   <td style="text-align:right;"> 0.116 </td>
-   <td style="text-align:right;"> 0.000 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(pop1834) </td>
-   <td style="text-align:right;"> 0.330 </td>
-   <td style="text-align:right;"> 0.010 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(percapitabeds) </td>
-   <td style="text-align:right;"> 0.105 </td>
-   <td style="text-align:right;"> 0.010 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(poors) </td>
-   <td style="text-align:right;"> 0.417 </td>
-   <td style="text-align:right;"> 0.000 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(percapitaincome) </td>
-   <td style="text-align:right;"> 0.428 </td>
-   <td style="text-align:right;"> 0.006 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> regionnortheast </td>
-   <td style="text-align:right;"> -0.404 </td>
-   <td style="text-align:right;"> 0.000 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> regionmidwest </td>
-   <td style="text-align:right;"> -0.219 </td>
-   <td style="text-align:right;"> 0.000 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> regionsouth </td>
-   <td style="text-align:right;"> 0.045 </td>
-   <td style="text-align:right;"> 0.416 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-3.262</td>
+<td style="text-align: right;">0.057</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(percapitaarea)</td>
+<td style="text-align: right;">-0.065</td>
+<td style="text-align: right;">0.006</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(popul)</td>
+<td style="text-align: right;">0.116</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(pop1834)</td>
+<td style="text-align: right;">0.330</td>
+<td style="text-align: right;">0.010</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(percapitabeds)</td>
+<td style="text-align: right;">0.105</td>
+<td style="text-align: right;">0.010</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(poors)</td>
+<td style="text-align: right;">0.417</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(percapitaincome)</td>
+<td style="text-align: right;">0.428</td>
+<td style="text-align: right;">0.006</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">regionnortheast</td>
+<td style="text-align: right;">-0.404</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">regionmidwest</td>
+<td style="text-align: right;">-0.219</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">regionsouth</td>
+<td style="text-align: right;">0.045</td>
+<td style="text-align: right;">0.416</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -714,30 +709,30 @@ crimes = \exp(\beta_0 + \beta_{poors} \log x_{poors}  + \cdots) = e^{\beta_0} x_
 <p>Once we had built our models we used 10-fold cross validation to compare them against each other. We also used LOOCV which resulted in very similar results to the 10-fold cross validation. Once we had included the negative binomial model we switched to only using the 10-fold cross validation. The interactions models had a better adjusted <span class="math inline">\(R^2\)</span> value and were found with the partial F-test to have at least one parameters that should not be set to 0 (at alpha = 0.05 significance level). We included a model called “Full”, which had all of the dependent variables included (without transformation) and a “simple” model which is only using the natural log of the percentage of poor people for each county.</p>
 <div class="cell">
 <div class="cell-output-display">
-
-<table class="table" style="margin-left: auto; margin-right: auto;">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>Average MSE across 10-folds</caption>
- <thead>
-  <tr>
-   <th style="text-align:right;"> Additive </th>
-   <th style="text-align:right;"> NB </th>
-   <th style="text-align:right;"> RegionInter </th>
-   <th style="text-align:right;"> AllInter </th>
-   <th style="text-align:right;"> Full </th>
-   <th style="text-align:right;"> Simple </th>
-  </tr>
- </thead>
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">Additive</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">NB</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">RegionInter</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">AllInter</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Full</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Simple</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:right;"> 376.1 </td>
-   <td style="text-align:right;"> 391.38 </td>
-   <td style="text-align:right;"> 409.8 </td>
-   <td style="text-align:right;"> 421.52 </td>
-   <td style="text-align:right;"> 489.51 </td>
-   <td style="text-align:right;"> 606.04 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: right;">376.1</td>
+<td style="text-align: right;">391.38</td>
+<td style="text-align: right;">409.8</td>
+<td style="text-align: right;">421.52</td>
+<td style="text-align: right;">489.51</td>
+<td style="text-align: right;">606.04</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -747,59 +742,59 @@ crimes = \exp(\beta_0 + \beta_{poors} \log x_{poors}  + \cdots) = e^{\beta_0} x_
 <p>At this point of the analysis everything had been conducted on the training 80% of the dataset. Cross validation was used as part of the model building process which means that the results will be biased. We kept the test set held out until the end when all models were finalized so that the estimated mean squared error is a better indication of the true mean squared error. The results on the test sets are as follows</p>
 <div class="cell">
 <div class="cell-output-display">
-
-<table class="table" style="margin-left: auto; margin-right: auto;">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>Test MSE will all data from test included</caption>
- <thead>
-  <tr>
-   <th style="text-align:right;"> AllInter </th>
-   <th style="text-align:right;"> NB </th>
-   <th style="text-align:right;"> Additive </th>
-   <th style="text-align:right;"> RegionInter </th>
-   <th style="text-align:right;"> Full </th>
-   <th style="text-align:right;"> Simple </th>
-  </tr>
- </thead>
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">AllInter</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">NB</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Additive</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">RegionInter</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Full</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Simple</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:right;"> 245.68 </td>
-   <td style="text-align:right;"> 251.68 </td>
-   <td style="text-align:right;"> 262.09 </td>
-   <td style="text-align:right;"> 276.91 </td>
-   <td style="text-align:right;"> 300.24 </td>
-   <td style="text-align:right;"> 459.16 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: right;">245.68</td>
+<td style="text-align: right;">251.68</td>
+<td style="text-align: right;">262.09</td>
+<td style="text-align: right;">276.91</td>
+<td style="text-align: right;">300.24</td>
+<td style="text-align: right;">459.16</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
-
-<table class="table" style="margin-left: auto; margin-right: auto;">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>Test MSE with Kings County excluded</caption>
- <thead>
-  <tr>
-   <th style="text-align:right;"> AllInter </th>
-   <th style="text-align:right;"> Additive </th>
-   <th style="text-align:right;"> NB </th>
-   <th style="text-align:right;"> RegionInter </th>
-   <th style="text-align:right;"> Full </th>
-   <th style="text-align:right;"> Simple </th>
-  </tr>
- </thead>
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">AllInter</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Additive</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">NB</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">RegionInter</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Full</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Simple</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:right;"> 231.13 </td>
-   <td style="text-align:right;"> 246.12 </td>
-   <td style="text-align:right;"> 248.63 </td>
-   <td style="text-align:right;"> 252.25 </td>
-   <td style="text-align:right;"> 296.38 </td>
-   <td style="text-align:right;"> 452.95 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: right;">231.13</td>
+<td style="text-align: right;">246.12</td>
+<td style="text-align: right;">248.63</td>
+<td style="text-align: right;">252.25</td>
+<td style="text-align: right;">296.38</td>
+<td style="text-align: right;">452.95</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -807,80 +802,80 @@ crimes = \exp(\beta_0 + \beta_{poors} \log x_{poors}  + \cdots) = e^{\beta_0} x_
 <p>Using this as our final model, we can fit this model to the test selection data. This can be seen as a more conservative approach to our parameters since it is on the test set rather than the training.</p>
 <div class="cell">
 <div class="cell-output-display">
-
-<table class="table" style="margin-left: auto; margin-right: auto;">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>Test set coefficients and p-values</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> Estimate </th>
-   <th style="text-align:right;"> Std. Error </th>
-   <th style="text-align:right;"> Pr(&gt;|t|) </th>
-  </tr>
- </thead>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Estimate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Std. Error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pr(&gt;|t|)</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:left;"> (Intercept) </td>
-   <td style="text-align:right;"> -616.416 </td>
-   <td style="text-align:right;"> 199.524 </td>
-   <td style="text-align:right;"> 0.003 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(percapitaarea) </td>
-   <td style="text-align:right;"> -1.448 </td>
-   <td style="text-align:right;"> 2.794 </td>
-   <td style="text-align:right;"> 0.606 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(popul) </td>
-   <td style="text-align:right;"> 4.967 </td>
-   <td style="text-align:right;"> 3.525 </td>
-   <td style="text-align:right;"> 0.163 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(pop1834) </td>
-   <td style="text-align:right;"> 19.648 </td>
-   <td style="text-align:right;"> 11.078 </td>
-   <td style="text-align:right;"> 0.080 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(percapitabeds) </td>
-   <td style="text-align:right;"> 3.228 </td>
-   <td style="text-align:right;"> 4.428 </td>
-   <td style="text-align:right;"> 0.468 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(poors) </td>
-   <td style="text-align:right;"> 25.484 </td>
-   <td style="text-align:right;"> 6.820 </td>
-   <td style="text-align:right;"> 0.000 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(percapitaincome) </td>
-   <td style="text-align:right;"> 51.636 </td>
-   <td style="text-align:right;"> 18.351 </td>
-   <td style="text-align:right;"> 0.006 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> regionnortheast </td>
-   <td style="text-align:right;"> -23.065 </td>
-   <td style="text-align:right;"> 6.468 </td>
-   <td style="text-align:right;"> 0.001 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> regionmidwest </td>
-   <td style="text-align:right;"> -5.330 </td>
-   <td style="text-align:right;"> 7.119 </td>
-   <td style="text-align:right;"> 0.456 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> regionsouth </td>
-   <td style="text-align:right;"> 8.088 </td>
-   <td style="text-align:right;"> 6.582 </td>
-   <td style="text-align:right;"> 0.223 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-616.416</td>
+<td style="text-align: right;">199.524</td>
+<td style="text-align: right;">0.003</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(percapitaarea)</td>
+<td style="text-align: right;">-1.448</td>
+<td style="text-align: right;">2.794</td>
+<td style="text-align: right;">0.606</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(popul)</td>
+<td style="text-align: right;">4.967</td>
+<td style="text-align: right;">3.525</td>
+<td style="text-align: right;">0.163</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(pop1834)</td>
+<td style="text-align: right;">19.648</td>
+<td style="text-align: right;">11.078</td>
+<td style="text-align: right;">0.080</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(percapitabeds)</td>
+<td style="text-align: right;">3.228</td>
+<td style="text-align: right;">4.428</td>
+<td style="text-align: right;">0.468</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(poors)</td>
+<td style="text-align: right;">25.484</td>
+<td style="text-align: right;">6.820</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(percapitaincome)</td>
+<td style="text-align: right;">51.636</td>
+<td style="text-align: right;">18.351</td>
+<td style="text-align: right;">0.006</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">regionnortheast</td>
+<td style="text-align: right;">-23.065</td>
+<td style="text-align: right;">6.468</td>
+<td style="text-align: right;">0.001</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">regionmidwest</td>
+<td style="text-align: right;">-5.330</td>
+<td style="text-align: right;">7.119</td>
+<td style="text-align: right;">0.456</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">regionsouth</td>
+<td style="text-align: right;">8.088</td>
+<td style="text-align: right;">6.582</td>
+<td style="text-align: right;">0.223</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -890,80 +885,80 @@ crimes = \exp(\beta_0 + \beta_{poors} \log x_{poors}  + \cdots) = e^{\beta_0} x_
 <p>Combining the training and test data sets and fitting our final model on this gives us our final coefficients. We want to use all the data if we are going to predict for more counties in the future. We can interpret these estimates exactly the same as for the training and test data. The p-values are artificially low, due to a large sample size and the fact that 80% of the data is from the training set which we used to generated the hypothesis.</p>
 <div class="cell">
 <div class="cell-output-display">
-
-<table class="table" style="margin-left: auto; margin-right: auto;">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>Final coefficients and p-values</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> Estimate </th>
-   <th style="text-align:right;"> Std. Error </th>
-   <th style="text-align:right;"> Pr(&gt;|t|) </th>
-  </tr>
- </thead>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Estimate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Std. Error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pr(&gt;|t|)</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:left;"> (Intercept) </td>
-   <td style="text-align:right;"> -387.885 </td>
-   <td style="text-align:right;"> 92.606 </td>
-   <td style="text-align:right;"> 0.000 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(percapitaarea) </td>
-   <td style="text-align:right;"> -5.009 </td>
-   <td style="text-align:right;"> 1.276 </td>
-   <td style="text-align:right;"> 0.000 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(popul) </td>
-   <td style="text-align:right;"> 6.108 </td>
-   <td style="text-align:right;"> 1.697 </td>
-   <td style="text-align:right;"> 0.000 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(pop1834) </td>
-   <td style="text-align:right;"> 18.891 </td>
-   <td style="text-align:right;"> 6.415 </td>
-   <td style="text-align:right;"> 0.003 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(percapitabeds) </td>
-   <td style="text-align:right;"> 4.327 </td>
-   <td style="text-align:right;"> 2.163 </td>
-   <td style="text-align:right;"> 0.046 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(poors) </td>
-   <td style="text-align:right;"> 25.606 </td>
-   <td style="text-align:right;"> 3.345 </td>
-   <td style="text-align:right;"> 0.000 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> log(percapitaincome) </td>
-   <td style="text-align:right;"> 25.910 </td>
-   <td style="text-align:right;"> 8.400 </td>
-   <td style="text-align:right;"> 0.002 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> regionnortheast </td>
-   <td style="text-align:right;"> -18.795 </td>
-   <td style="text-align:right;"> 3.311 </td>
-   <td style="text-align:right;"> 0.000 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> regionmidwest </td>
-   <td style="text-align:right;"> -9.823 </td>
-   <td style="text-align:right;"> 3.303 </td>
-   <td style="text-align:right;"> 0.003 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> regionsouth </td>
-   <td style="text-align:right;"> 4.531 </td>
-   <td style="text-align:right;"> 3.009 </td>
-   <td style="text-align:right;"> 0.133 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-387.885</td>
+<td style="text-align: right;">92.606</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(percapitaarea)</td>
+<td style="text-align: right;">-5.009</td>
+<td style="text-align: right;">1.276</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(popul)</td>
+<td style="text-align: right;">6.108</td>
+<td style="text-align: right;">1.697</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(pop1834)</td>
+<td style="text-align: right;">18.891</td>
+<td style="text-align: right;">6.415</td>
+<td style="text-align: right;">0.003</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(percapitabeds)</td>
+<td style="text-align: right;">4.327</td>
+<td style="text-align: right;">2.163</td>
+<td style="text-align: right;">0.046</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(poors)</td>
+<td style="text-align: right;">25.606</td>
+<td style="text-align: right;">3.345</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(percapitaincome)</td>
+<td style="text-align: right;">25.910</td>
+<td style="text-align: right;">8.400</td>
+<td style="text-align: right;">0.002</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">regionnortheast</td>
+<td style="text-align: right;">-18.795</td>
+<td style="text-align: right;">3.311</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">regionmidwest</td>
+<td style="text-align: right;">-9.823</td>
+<td style="text-align: right;">3.303</td>
+<td style="text-align: right;">0.003</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">regionsouth</td>
+<td style="text-align: right;">4.531</td>
+<td style="text-align: right;">3.009</td>
+<td style="text-align: right;">0.133</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -1077,9 +1072,6 @@ crimes = \exp(\beta_0 + \beta_{poors} \log x_{poors}  + \cdots) = e^{\beta_0} x_
 </tr>
 </tbody>
 </table>
-<div class="cell">
-
-</div>
 </section>
 <section id="model-diagnostics" class="level3">
 <h3 class="anchored" data-anchor-id="model-diagnostics">Model Diagnostics</h3>
@@ -1090,78 +1082,78 @@ crimes = \exp(\beta_0 + \beta_{poors} \log x_{poors}  + \cdots) = e^{\beta_0} x_
 <p><img src="index_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-
-<table class="table" style="margin-left: auto; margin-right: auto;">
- <thead>
-  <tr>
-   <th style="text-align:left;"> county </th>
-   <th style="text-align:left;"> state </th>
-   <th style="text-align:right;"> Student Residuals </th>
-  </tr>
- </thead>
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">county</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">state</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Student Residuals</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:left;"> Kings </td>
-   <td style="text-align:left;"> NY </td>
-   <td style="text-align:right;"> 12.753 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Atlantic </td>
-   <td style="text-align:left;"> NJ </td>
-   <td style="text-align:right;"> 3.490 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> St._Louis_City </td>
-   <td style="text-align:left;"> MO </td>
-   <td style="text-align:right;"> 3.183 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Ector </td>
-   <td style="text-align:left;"> TX </td>
-   <td style="text-align:right;"> 2.817 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Leon </td>
-   <td style="text-align:left;"> FL </td>
-   <td style="text-align:right;"> 2.570 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Delaware </td>
-   <td style="text-align:left;"> IN </td>
-   <td style="text-align:right;"> 2.480 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Jefferson </td>
-   <td style="text-align:left;"> KY </td>
-   <td style="text-align:right;"> 2.369 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Madison </td>
-   <td style="text-align:left;"> AL </td>
-   <td style="text-align:right;"> 2.341 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Pulaski </td>
-   <td style="text-align:left;"> AR </td>
-   <td style="text-align:right;"> 2.097 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Columbiana </td>
-   <td style="text-align:left;"> OH </td>
-   <td style="text-align:right;"> 2.088 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Shawnee </td>
-   <td style="text-align:left;"> KS </td>
-   <td style="text-align:right;"> 2.012 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Clay </td>
-   <td style="text-align:left;"> MO </td>
-   <td style="text-align:right;"> 1.981 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: left;">Kings</td>
+<td style="text-align: left;">NY</td>
+<td style="text-align: right;">12.753</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Atlantic</td>
+<td style="text-align: left;">NJ</td>
+<td style="text-align: right;">3.490</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">St._Louis_City</td>
+<td style="text-align: left;">MO</td>
+<td style="text-align: right;">3.183</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ector</td>
+<td style="text-align: left;">TX</td>
+<td style="text-align: right;">2.817</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Leon</td>
+<td style="text-align: left;">FL</td>
+<td style="text-align: right;">2.570</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Delaware</td>
+<td style="text-align: left;">IN</td>
+<td style="text-align: right;">2.480</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jefferson</td>
+<td style="text-align: left;">KY</td>
+<td style="text-align: right;">2.369</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Madison</td>
+<td style="text-align: left;">AL</td>
+<td style="text-align: right;">2.341</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pulaski</td>
+<td style="text-align: left;">AR</td>
+<td style="text-align: right;">2.097</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Columbiana</td>
+<td style="text-align: left;">OH</td>
+<td style="text-align: right;">2.088</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Shawnee</td>
+<td style="text-align: left;">KS</td>
+<td style="text-align: right;">2.012</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Clay</td>
+<td style="text-align: left;">MO</td>
+<td style="text-align: right;">1.981</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -1177,144 +1169,144 @@ crimes = \exp(\beta_0 + \beta_{poors} \log x_{poors}  + \cdots) = e^{\beta_0} x_
 </div>
 <div class="cell">
 <div class="cell-output-display">
-
-<table class="table" style="margin-left: auto; margin-right: auto;">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>High &gt; 2/sqrt(n) DFBETA values</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;"> county </th>
-   <th style="text-align:left;"> coefficient </th>
-   <th style="text-align:right;"> DFBETA </th>
-  </tr>
- </thead>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">county</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">coefficient</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">DFBETA</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:left;"> Kings (NY) </td>
-   <td style="text-align:left;"> log(percapitaincome) </td>
-   <td style="text-align:right;"> -5.579 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Kings (NY) </td>
-   <td style="text-align:left;"> log(pop1834) </td>
-   <td style="text-align:right;"> -5.005 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Atlantic (NJ) </td>
-   <td style="text-align:left;"> log(percapitaincome) </td>
-   <td style="text-align:right;"> 3.532 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Kings (NY) </td>
-   <td style="text-align:left;"> log(poors) </td>
-   <td style="text-align:right;"> 3.401 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Kings (NY) </td>
-   <td style="text-align:left;"> log(percapitaarea) </td>
-   <td style="text-align:right;"> -2.924 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Leon (FL) </td>
-   <td style="text-align:left;"> log(pop1834) </td>
-   <td style="text-align:right;"> 2.610 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Kings (NY) </td>
-   <td style="text-align:left;"> log(percapitabeds) </td>
-   <td style="text-align:right;"> -2.463 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Fulton (GA) </td>
-   <td style="text-align:left;"> log(percapitaincome) </td>
-   <td style="text-align:right;"> 2.322 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Ector (TX) </td>
-   <td style="text-align:left;"> log(percapitaincome) </td>
-   <td style="text-align:right;"> 1.700 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Westchester (NY) </td>
-   <td style="text-align:left;"> log(percapitaincome) </td>
-   <td style="text-align:right;"> -1.634 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Pitt (NC) </td>
-   <td style="text-align:left;"> log(pop1834) </td>
-   <td style="text-align:right;"> -1.578 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Clay (MO) </td>
-   <td style="text-align:left;"> log(percapitaincome) </td>
-   <td style="text-align:right;"> -1.499 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Columbiana (OH) </td>
-   <td style="text-align:left;"> log(percapitaincome) </td>
-   <td style="text-align:right;"> 1.410 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Delaware (IN) </td>
-   <td style="text-align:left;"> log(pop1834) </td>
-   <td style="text-align:right;"> -1.399 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Manatee (FL) </td>
-   <td style="text-align:left;"> log(pop1834) </td>
-   <td style="text-align:right;"> -1.234 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Pitt (NC) </td>
-   <td style="text-align:left;"> log(percapitaincome) </td>
-   <td style="text-align:right;"> -1.222 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Sarasota (FL) </td>
-   <td style="text-align:left;"> log(pop1834) </td>
-   <td style="text-align:right;"> -1.208 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Philadelphia (PA) </td>
-   <td style="text-align:left;"> log(percapitaincome) </td>
-   <td style="text-align:right;"> 1.169 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Columbiana (OH) </td>
-   <td style="text-align:left;"> log(pop1834) </td>
-   <td style="text-align:right;"> 1.144 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Alachua (FL) </td>
-   <td style="text-align:left;"> log(pop1834) </td>
-   <td style="text-align:right;"> 1.045 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Atlantic (NJ) </td>
-   <td style="text-align:left;"> log(poors) </td>
-   <td style="text-align:right;"> 1.033 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Davis (UT) </td>
-   <td style="text-align:left;"> log(percapitaincome) </td>
-   <td style="text-align:right;"> 1.002 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Collier (FL) </td>
-   <td style="text-align:left;"> log(percapitaincome) </td>
-   <td style="text-align:right;"> 0.994 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Yolo (CA) </td>
-   <td style="text-align:left;"> log(percapitaincome) </td>
-   <td style="text-align:right;"> 0.990 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Hampshire (MA) </td>
-   <td style="text-align:left;"> log(pop1834) </td>
-   <td style="text-align:right;"> -0.990 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: left;">Kings (NY)</td>
+<td style="text-align: left;">log(percapitaincome)</td>
+<td style="text-align: right;">-5.579</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Kings (NY)</td>
+<td style="text-align: left;">log(pop1834)</td>
+<td style="text-align: right;">-5.005</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Atlantic (NJ)</td>
+<td style="text-align: left;">log(percapitaincome)</td>
+<td style="text-align: right;">3.532</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Kings (NY)</td>
+<td style="text-align: left;">log(poors)</td>
+<td style="text-align: right;">3.401</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Kings (NY)</td>
+<td style="text-align: left;">log(percapitaarea)</td>
+<td style="text-align: right;">-2.924</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Leon (FL)</td>
+<td style="text-align: left;">log(pop1834)</td>
+<td style="text-align: right;">2.610</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Kings (NY)</td>
+<td style="text-align: left;">log(percapitabeds)</td>
+<td style="text-align: right;">-2.463</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fulton (GA)</td>
+<td style="text-align: left;">log(percapitaincome)</td>
+<td style="text-align: right;">2.322</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ector (TX)</td>
+<td style="text-align: left;">log(percapitaincome)</td>
+<td style="text-align: right;">1.700</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Westchester (NY)</td>
+<td style="text-align: left;">log(percapitaincome)</td>
+<td style="text-align: right;">-1.634</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pitt (NC)</td>
+<td style="text-align: left;">log(pop1834)</td>
+<td style="text-align: right;">-1.578</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Clay (MO)</td>
+<td style="text-align: left;">log(percapitaincome)</td>
+<td style="text-align: right;">-1.499</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Columbiana (OH)</td>
+<td style="text-align: left;">log(percapitaincome)</td>
+<td style="text-align: right;">1.410</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Delaware (IN)</td>
+<td style="text-align: left;">log(pop1834)</td>
+<td style="text-align: right;">-1.399</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Manatee (FL)</td>
+<td style="text-align: left;">log(pop1834)</td>
+<td style="text-align: right;">-1.234</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pitt (NC)</td>
+<td style="text-align: left;">log(percapitaincome)</td>
+<td style="text-align: right;">-1.222</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sarasota (FL)</td>
+<td style="text-align: left;">log(pop1834)</td>
+<td style="text-align: right;">-1.208</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Philadelphia (PA)</td>
+<td style="text-align: left;">log(percapitaincome)</td>
+<td style="text-align: right;">1.169</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Columbiana (OH)</td>
+<td style="text-align: left;">log(pop1834)</td>
+<td style="text-align: right;">1.144</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Alachua (FL)</td>
+<td style="text-align: left;">log(pop1834)</td>
+<td style="text-align: right;">1.045</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Atlantic (NJ)</td>
+<td style="text-align: left;">log(poors)</td>
+<td style="text-align: right;">1.033</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Davis (UT)</td>
+<td style="text-align: left;">log(percapitaincome)</td>
+<td style="text-align: right;">1.002</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Collier (FL)</td>
+<td style="text-align: left;">log(percapitaincome)</td>
+<td style="text-align: right;">0.994</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Yolo (CA)</td>
+<td style="text-align: left;">log(percapitaincome)</td>
+<td style="text-align: right;">0.990</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hampshire (MA)</td>
+<td style="text-align: left;">log(pop1834)</td>
+<td style="text-align: right;">-0.990</td>
+</tr>
 </tbody>
 </table>
+
 
 </div>
 </div>
@@ -1327,9 +1319,6 @@ crimes = \exp(\beta_0 + \beta_{poors} \log x_{poors}  + \cdots) = e^{\beta_0} x_
 </div>
 </div>
 <p>We can see from the diagnostic plots that the residuals and fitted values are approximately symmetric and the residuals don’t appear to be increasing or decreasing as the fitted values increases. The normal QQ plot shows that we have larger tails than we would like. The estimates for the parameters do not dependent on it following a normal distribution but our p-values should be interpreted a little pessimistically. The two points that are labeled, 6 (Kings) and 1 (Los Angeles) are outliers. We can see that Los Angeles has a high leverage and also an extreme standardized residual which makes it influential. Kings county is closer to the mean for the dependent variables so it’s leverage is lower. It is still marked by the Residuals vs Leverage plot as an issue as its residual is so high.</p>
-<div class="cell">
-
-</div>
 </section>
 </section>
 <section id="correlations" class="level3">
@@ -1358,17 +1347,17 @@ crimes = \exp(\beta_0 + \beta_{poors} \log x_{poors}  + \cdots) = e^{\beta_0} x_
 </section>
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body" role="doc-bibliography">
-<div id="ref-agresti:categorical" class="csl-entry" role="doc-biblioentry">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body" role="list">
+<div id="ref-agresti:categorical" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[1] </div><div class="csl-right-inline">Agresti, A. 1990. <em>Categorical data analysis</em>. Wiley.</div>
 </div>
-<div id="ref-isl" class="csl-entry" role="doc-biblioentry">
+<div id="ref-isl" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[2] </div><div class="csl-right-inline">James, G. et al. 2014. <em>An introduction to statistical learning: With applications in r</em>. Springer Publishing Company, Incorporated.</div>
 </div>
-<div id="ref-mit_statistics_for_applications" class="csl-entry" role="doc-biblioentry">
+<div id="ref-mit_statistics_for_applications" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[3] </div><div class="csl-right-inline">Statistics for applications: 18.650 / 18.6501: 2016. <a href="https://ocw.mit.edu/courses/mathematics/18-650-statistics-for-applications-fall-2016"><em>https://ocw.mit.edu/courses/mathematics/18-650-statistics-for-applications-fall-2016</em></a>.</div>
 </div>
-<div id="ref-wiki:vif" class="csl-entry" role="doc-biblioentry">
+<div id="ref-wiki:vif" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[4] </div><div class="csl-right-inline">Wikipedia contributors 2019. Variance inflation factor — <span>Wikipedia</span><span>,</span> the free encyclopedia. <a href="https://en.wikipedia.org/w/index.php?title=Variance_inflation_factor&amp;oldid=878147754" class="uri">https://en.wikipedia.org/w/index.php?title=Variance_inflation_factor&amp;oldid=878147754</a>.</div>
 </div>
 </div></section></div></main> <!-- /main -->
@@ -1399,9 +1388,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -1466,6 +1469,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {

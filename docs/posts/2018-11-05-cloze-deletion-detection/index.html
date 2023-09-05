@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.253">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -19,14 +19,15 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
 }
-.hanging div.csl-entry {
+.hanging-indent div.csl-entry {
   margin-left:2em;
   text-indent:-2em;
 }
@@ -40,8 +41,7 @@ div.csl-right-inline {
 }
 div.csl-indent {
   margin-left: 2em;
-}
-</style>
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -76,10 +76,12 @@ div.csl-indent {
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
@@ -96,27 +98,29 @@ div.csl-indent {
     <span class="navbar-title">stefanengineering.comV3</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../about.html">
+    <a class="nav-link" href="../../about.html" rel="" target="">
  <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/"><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/" rel="" target=""><i class="bi bi-github" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com"><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com" rel="" target=""><i class="bi bi-twitter" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
 </ul>
-              <div id="quarto-search" class="" title="Search"></div>
+            <div class="quarto-navbar-tools">
+</div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
@@ -191,7 +195,7 @@ div.csl-indent {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../../post/2018-11-05-cloze-deletion-detection_files/word_count_density.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">Sentence Word Count Density for 8 Sidor and Göteborgs-Posten 2013</figcaption><p></p>
+<figcaption class="figure-caption">Sentence Word Count Density for 8 Sidor and Göteborgs-Posten 2013</figcaption>
 </figure>
 </div>
 <p>The data from Språkbanken comes in XML form <span class="citation" data-cites="spraakbanken">[<a href="#ref-spraakbanken" role="doc-biblioref">4</a>]</span>. The two data sets I compared were 8 Sidor (from 2002/11/14 to 2017/10/09) and Göteborgs-Posten (from 2013). 8 Sidor and Göteborgs-Posten differ in their goals as news sites. 8 Sidor describe itself on its website as “en nyhetstidning på lättläst svenska.” <span class="citation" data-cites="8sidor">[<a href="#ref-8sidor" role="doc-biblioref">1</a>]</span>, which means that it is a newspaper in easy to read Swedish. We can see this reflected in the Part-of-speech Count Summary Table. Göteborgs-Posten (GP) is a more traditional <span class="citation" data-cites="wiki:gp">[<a href="#ref-wiki:gp" role="doc-biblioref">10</a>]</span>. Example sentence from the two 8 Sidor is,</p>
@@ -321,13 +325,13 @@ div.csl-indent {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../../post/2018-11-05-cloze-deletion-detection_files/blstm_compare_loss.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">Comparing cross-entropy loss between LSTM and Bidirectional LSTM Models</figcaption><p></p>
+<figcaption class="figure-caption">Comparing cross-entropy loss between LSTM and Bidirectional LSTM Models</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../../post/2018-11-05-cloze-deletion-detection_files/blstm_compare_acc.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">Comparing accuracy loss between LSTM and Bidirectional LSTM Models</figcaption><p></p>
+<figcaption class="figure-caption">Comparing accuracy loss between LSTM and Bidirectional LSTM Models</figcaption>
 </figure>
 </div>
 <p>We can see the Bidirectional LSTM model performs much better than the LSTM model on the training data. It also performs a little bit better on the validation data. From these plots we can see that both the models are over fitting but the Bidirectional LSTM model is over fitting more so than the standard LSTM model.</p>
@@ -341,7 +345,7 @@ div.csl-indent {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../../post/2018-11-05-cloze-deletion-detection_files/dropout_compare_plot.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">Comparing dropout values of 0.2, 0.4, 0.6 and 0.8 on Bidirectional LSTM Model</figcaption><p></p>
+<figcaption class="figure-caption">Comparing dropout values of 0.2, 0.4, 0.6 and 0.8 on Bidirectional LSTM Model</figcaption>
 </figure>
 </div>
 <p>Using the Bidirectional LSTM model described in the <a href="#sec:model_config" data-reference-type="ref" data-reference="sec:model_config">Model Config Section</a>, an experiment was set up to see how dropout parameter affected the results on the model. All models has the Bidirectional LSTM Layer configured with the dropout set to the value <span class="math inline">\(d = 0.2, 0.4, 0.6, 0.8\)</span>. The models were all run with 25 epochs (<span class="math inline">\(0,\ldots,24\)</span>) that took about 300 seconds for each epoch. The recurrent dropout is also set to the same <span class="math inline">\(d\)</span> value. As described in <span class="citation" data-cites="recurrent_dropout">[<a href="#ref-recurrent_dropout" role="doc-biblioref">3</a>]</span>, the recurrent dropout randomly drops recurrent connection within the LSTM. The normal dropout parameter randomly drops the inputs and output into and out of the LSTM layer.</p>
@@ -387,7 +391,7 @@ div.csl-indent {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../../post/2018-11-05-cloze-deletion-detection_files/cross_entropy_word_count.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">Average Cross Entropy for each word count group</figcaption><p></p>
+<figcaption class="figure-caption">Average Cross Entropy for each word count group</figcaption>
 </figure>
 </div>
 <p>The points <span class="math inline">\((x,y)\)</span> represent the mean cross entropy of each sentence that has a word count of <span class="math inline">\(x\)</span>. The bars represent the standard deviation within the each word count group. We can see from this graph that very short sentences are hard to predict (<span class="math inline">\(x &lt; 5\)</span>) as well as large sentences (<span class="math inline">\(x &gt; 25\)</span>).</p>
@@ -508,13 +512,13 @@ div.csl-indent {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../../post/2018-11-05-cloze-deletion-detection_files/compare_atta_gp_loss.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">Comparing accuracy and cross-entropy loss between 8 Sidor and GP 2013</figcaption><p></p>
+<figcaption class="figure-caption">Comparing accuracy and cross-entropy loss between 8 Sidor and GP 2013</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../../post/2018-11-05-cloze-deletion-detection_files/compare_atta_gp_acc.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">Comparing accuracy and cross-entropy loss between 8 Sidor and GP 2013</figcaption><p></p>
+<figcaption class="figure-caption">Comparing accuracy and cross-entropy loss between 8 Sidor and GP 2013</figcaption>
 </figure>
 </div>
 <p>The training loss decreasing fast for both data sets but the model overfits the training data. The loss for the Göteborgs-Posten data set actually starts to increase with the number of epochs. Overall, the model can predict better on the 8 Sidor data set than the data from Göteborgs-Posten 2013.</p>
@@ -534,38 +538,38 @@ div.csl-indent {
 </section>
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body" role="doc-bibliography">
-<div id="ref-8sidor" class="csl-entry" role="doc-biblioentry">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body" role="list">
+<div id="ref-8sidor" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[1] </div><div class="csl-right-inline">8 Sidor 2018. 8 sidor. <a href="http://8sidor.se" class="uri">http://8sidor.se</a>.</div>
 </div>
-<div id="ref-keras" class="csl-entry" role="doc-biblioentry">
+<div id="ref-keras" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[2] </div><div class="csl-right-inline">Chollet, F. et al. 2015. Keras. <a href="https://keras.io" class="uri">https://keras.io</a>.</div>
 </div>
-<div id="ref-recurrent_dropout" class="csl-entry" role="doc-biblioentry">
+<div id="ref-recurrent_dropout" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[3] </div><div class="csl-right-inline">Gal, Y. and Ghahramani, Z. 2016. <a href="http://dl.acm.org/citation.cfm?id=3157096.3157211">A theoretically grounded application of dropout in recurrent neural networks</a>. <em>Proceedings of the 30th international conference on neural information processing systems</em> (USA, 2016), 1027–1035.</div>
 </div>
-<div id="ref-spraakbanken" class="csl-entry" role="doc-biblioentry">
+<div id="ref-spraakbanken" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[4] </div><div class="csl-right-inline">Göteborgs universitet 2018. Språkbanken. <a href="https://spraakbanken.gu.se" class="uri">https://spraakbanken.gu.se</a>.</div>
 </div>
-<div id="ref-ngcoursera" class="csl-entry" role="doc-biblioentry">
+<div id="ref-ngcoursera" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[5] </div><div class="csl-right-inline">Ng, A. 2018. Sequence models – <span>Coursera</span>. <a href="https://www.coursera.org/learn/nlp-sequence-models" class="uri">https://www.coursera.org/learn/nlp-sequence-models</a>.</div>
 </div>
-<div id="ref-dropout_srivastava" class="csl-entry" role="doc-biblioentry">
+<div id="ref-dropout_srivastava" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[6] </div><div class="csl-right-inline">Srivastava, N. et al. 2014. <a href="http://jmlr.org/papers/v15/srivastava14a.html">Dropout: A simple way to prevent neural networks from overfitting</a>. <em>Journal of Machine Learning Research</em>. 15, (2014), 1929–1958.</div>
 </div>
-<div id="ref-clozeproc" class="csl-entry" role="doc-biblioentry">
+<div id="ref-clozeproc" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[7] </div><div class="csl-right-inline">Taylor, W.L. 1953. <span>“Cloze procedure”</span>: A new tool for measuring readability. <em>Journalism Bulletin</em>. 30, 4 (1953), 415–433. DOI:https://doi.org/<a href="https://doi.org/10.1177/107769905303000401">10.1177/107769905303000401</a>.</div>
 </div>
-<div id="ref-wiki:clozetest" class="csl-entry" role="doc-biblioentry">
+<div id="ref-wiki:clozetest" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[8] </div><div class="csl-right-inline">Wikipedia contributors 2018. Cloze test — <span>Wikipedia</span><span>,</span> the free encyclopedia. <a href="https://en.wikipedia.org/w/index.php?title=Cloze_test&amp;oldid=847324700" class="uri">https://en.wikipedia.org/w/index.php?title=Cloze_test&amp;oldid=847324700</a>.</div>
 </div>
-<div id="ref-wiki:crossentropy" class="csl-entry" role="doc-biblioentry">
+<div id="ref-wiki:crossentropy" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[9] </div><div class="csl-right-inline">Wikipedia contributors 2018. <a href="https://en.wikipedia.org/w/index.php?title=Cross_entropy&amp;oldid=864650073">Cross entropy — <span>Wikipedia</span><span>,</span> the free encyclopedia</a>.</div>
 </div>
-<div id="ref-wiki:gp" class="csl-entry" role="doc-biblioentry">
+<div id="ref-wiki:gp" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[10] </div><div class="csl-right-inline">Wikipedia contributors 2018. Göteborgs-posten — <span>Wikipedia</span><span>,</span> the free encyclopedia. <a href="https://en.wikipedia.org/w/index.php?title=G%C3%B6teborgs-Posten&amp;oldid=865127708" class="uri">https://en.wikipedia.org/w/index.php?title=G%C3%B6teborgs-Posten&amp;oldid=865127708</a>.</div>
 </div>
-<div id="ref-fluentforever" class="csl-entry" role="doc-biblioentry">
+<div id="ref-fluentforever" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[11] </div><div class="csl-right-inline">Wyner, G. 2014. <em>Fluent forever: How to learn any language fast and never forget it</em>. Harmony Books.</div>
 </div>
 </div></section></div></main> <!-- /main -->
@@ -596,9 +600,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -663,6 +681,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
