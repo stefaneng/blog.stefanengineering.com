@@ -1,0 +1,71 @@
+---
+draft: true
+title: Testing independence in 2x2 tables
+author: Stefan Eng
+date: '2023-09-16'
+slug: sum-of-uniform-random-variables-relation-to-e
+categories:
+  - statistics
+tags:
+  - 2x2
+  - bayesian
+output:
+  blogdown::html_page:
+    toc: no
+    fig_width: 5
+    fig_height: 5
+link-citations: true
+csl: ../../static/bibtex/acm-sig-proceedings.csl
+bibliography: ../../static/bibtex/2x2.bib  
+nocite: |
+  @*
+---
+
+## Introduction
+
+Setup: 2x2 contingency table. 
+
+|   |       |       |       |   |
+|---|-------|-------|-------|---|
+|   | a     | b     | $n_1$ |   |
+|   | c     | d     | $n_2$ |   |
+|   | $m_1$ | $m_2$ | N     |   |
+
+Let $p_1 = a / n_1$ and $p_2 = c / n_2$.
+
+One of the simplest datasets that we can analyze hides a can of worms
+
+- Should we use design-based inference if we know the design?
+- Should we condition on (approximately) ancillary statistics?
+- Are exact tests conservative?
+
+## Sampling Designs for Contingency Tables
+
+### Poisson (no margins fixed)
+
+### Binomial (one margin fixed)
+
+The binomial case appears quite frequently in practice.
+Assume that we have fixed $n_1$ and $n_2$.
+This could be a control and treatment group that we give a drug to.
+We follow up with the group and find 
+
+
+### Hypergeometric (two margins fixed)
+
+
+## Pearson's Chi-squared test
+
+## Likelihood ratio test
+
+The null hypothesis is that $p_1 = p_2$.
+Our joint likelihood for the binomial case is:
+
+$$
+\mathcal{L}(p_1, p_2 | a,b,c,d) \propto p_1^a (1 - p_1)^b p_2^c (1 - p_2)^d
+$$
+
+If we plug
+
+
+## References

@@ -1,0 +1,133 @@
+---
+title: Likelihood ratio test for 2x2 independence
+author: Stefan Eng
+date: '2023-09-17'
+slug: LRT-2x2-independence
+categories:
+  - statistics
+tags:
+  - LRT
+  - G-test
+output:
+  blogdown::html_page:
+    toc: no
+    fig_width: 5
+    fig_height: 5
+link-citations: true
+csl: ../static/bibtex/acm-sig-proceedings.csl
+---
+
+```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
+## Load frequently used packages for blog posts
+
+# Don't show code by default
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, comment = NA, message = FALSE)
+knitr::opts_knit$set(global.par = TRUE)
+```
+
+## Likelihood Ratio Test for independence in 2x2 contingency table
+
+| | Success | Failure |
+|--- |-------|-------|-------|
+| Group 1| a     | b     | $n_1$ |
+| Group 2 | c     | d     | $n_2$ |
+| Total | $m_1$ | $m_2$ | N     |
+
+Assume that $n_1$ and $n_2$ are fixed and we sample from binomial distributions with success probability $p_1$ and $p_2$.
+Then, we can find the maximum likelihood estimate for $p_1$ and $p_2$ as $\hat{p}_1 = a / n_1$ and $\hat{p}_2 = c / n_2$.
+
+Since $p_1$ and $p_2$ are independent, then the joint likelihood is
+
+$$
+\begin{aligned}
+\mathcal L(p_1, p_2 | a,b,c,d) &= {n_1 \choose a} {n_2 \choose b} p_1^a (1 - p_1)^b p_2^c (1 - p_c)^d\\
+&\propto_{p_1, p_2} p_1^a (1 - p_1)^b p_2^c (1 - p_c)^d
+\end{aligned}
+$$
+
+Then the log-likelihood $\ell$ is 
+
+$$
+\begin{aligned}
+\ell(p_1, p_2 | a,b,c,d) &= \log \mathcal L(p_1, p_2 | a,b,c,d)\\
+&\underset{p_1, p_2}{\propto} a \log p_1 + b \ln (1 - p_1) + c \ln p_2 + d \ln (1 - p_2)
+\end{aligned}
+$$
+
+Evaluating the log-likelihood at the maximum likelihood estimates $\hat{p}_1$ and $\hat{p}_2$:
+
+$$
+\ell(\hat{p}_1, \hat{p}_2 | a,b,c,d) \underset{p_1, p_2}{\propto} a \log \frac{a}{n_1} + b \ln \frac{b}{n_1} + c \ln \frac{c}{n_2} + d \ln \frac{d}{n_2}
+$$
+
+Under the null hypothesis that $p_1 = p_2$ we would expect to see the following table
+
+| | Success | Failure |
+|--- |-------|-------|-------|
+| Group 1| $a_{E} = \frac{n_1 \cdot m_1}{N}$     | $b_{E} = \frac{n_1 \cdot m_2}{N}$     | $n_1$ |
+| Group 2| $c_{E} = \frac{n_2 \cdot m_1}{N}$     | $d_{E} = \frac{n_2 \cdot m_2}{N}$     | $n_2$ |
+| Total | $m_1$ | $m_2$ | N     |
+
+Expressing this in terms of success probabilities, this would mean that $p_0 = m_1 / N$.
+Under this $p_0$ then then likelihood is
+
+$$
+\begin{aligned}
+\ell(p_0,p_0 | a,b,c,d) &\underset{p_1, p_2}{\propto} a \log \frac{m_1}{N} + b \ln \frac{m_2}{N} + c \ln \frac{m_1}{N} + d \ln \frac{m_2}{N}
+\end{aligned}
+$$
+
+Now we can solve for the likelihood ratio test statistic
+
+$$
+\begin{aligned}
+\ell(\hat{p}_1, \hat{p}_2 | a,b,c,d) - \ell(p_0 | a,b,c,d) &= a \log \frac{a}{n_1} + b \ln \frac{b}{n_1} + c \ln \frac{c}{n_2} + d \ln \frac{d}{n_2}\\
+&\quad - \left(
+  a \log \frac{m_1}{N} + b \ln \frac{m_2}{N} + c \ln \frac{m_1}{N} + d \ln \frac{m_2}{N}
+\right)\\
+&= a \ln \left( a \frac{N}{n_1 m_1} \right) + b \ln \left( b \frac{N}{n_1 m_2}\right) + c \ln \left( c \frac{N}{n_2 m_1}\right) + d \ln \left( d \frac{N}{n_2 m_2}\right)\\
+&= a \ln \left( \frac{a}{a_E} \right) + b \ln \left( \frac{b}{b_E}\right) + c \ln \left( \frac{c}{c_E}\right) + d \ln \left( \frac{d}{d_E}\right)
+\end{aligned}
+$$
+
+Multiplying this expression by 2 makes this expression follow a Chi-squared distribution in the limit.
+The same reasoning applies to larger contingency tables. 
+
+How does this compare to the Chi-squared test? We can specifically look at how these functions differ first:
+$$
+\begin{aligned}
+f_\chi(O,E) &= \frac{(O - E)^2}{E}\\
+f_{LRT}(O,E) &= O \ln \left( \frac{O}{E}\right)
+\end{aligned}
+$$
+
+Both of these tend towards a $\chi^2$ distribution with 1 degree of freedom in the 2x2 case and $(J - 1)(K - 1)$ degrees of freedom in the J x K contingency table case.
+
+```{r, eval = FALSE}
+# Some experiment on comparison between Chisq and LRT
+chisq <- function(o, e) {
+  (o - e)^2 / e
+}
+lrt <- function(o, e) {
+  2 * o * log(o / e)
+}
+N <- 10
+y <- 1:9
+p <- c(1/8, 1/4, 1/2)
+sim_data <- expand.grid(
+  N = N,
+  y = y,
+  p = p
+)
+
+
+sim_data$expected <- sim_data$N * sim_data$p
+sim_data$chisq <- chisq(o = sim_data$y, e = sim_data$expected)
+sim_data$lrt <- lrt(o = sim_data$y, e = sim_data$expected)
+library(ggplot2)
+
+ggplot(sim_data) +
+  geom_step(aes(x = y, y = chisq, col = as.factor(p))) +
+  geom_step(aes(x = y, y = lrt, col = as.factor(p)), lty = 2) +
+  geom_hline(yintercept = qchisq(.95, df = 1))
+```
