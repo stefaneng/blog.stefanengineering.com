@@ -103,7 +103,7 @@ $$
 
 Both of these tend towards a $\chi^2$ distribution with 1 degree of freedom in the 2x2 case and $(J - 1)(K - 1)$ degrees of freedom in the J x K contingency table case.
 
-```{r, eval = FALSE}
+```{r, echo = FALSE, message = FALSE, warning = FALSE, eval = FALSE}
 # Some experiment on comparison between Chisq and LRT
 chisq <- function(o, e) {
   (o - e)^2 / e
