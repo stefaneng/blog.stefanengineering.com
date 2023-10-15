@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Stefan Eng">
+<meta name="dcterms.date" content="2023-10-14">
+
+<title>Stefan Eng - Remembering common probability densities and integrals</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Stefan Eng</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/stefaneng" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/stefaneng13/" rel="" target=""><i class="bi bi-linkedin" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Remembering common probability densities and integrals</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">statistics</div>
+                <div class="quarto-category">probability</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Stefan Eng </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 14, 2023</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<p>One common issue that happens to new students of statistics and probability is attempting to remember probability density/mass functions and common integrals and sums needed to compute expected values, variances, marginal distributions, or posterior distributions. There are a few integrals and sums that come up over and over again and using the PDF (probability density function) or PMF (probability mass function) can help us remember these.</p>
+<section id="poisson-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="poisson-distribution">Poisson Distribution</h2>
+<p>First we start with Poisson distribution. This distribution is supported on the non-negative integers <span class="math inline">\(0, 1, \ldots\)</span> If <span class="math inline">\(X \sim \operatorname{Pois}(\lambda)\)</span> then, <span class="math display">\[
+P(X = x \mid \lambda) = \frac{\lambda^x}{x!} \exp(-\lambda)
+\]</span> Now, when I was first learning probability I always had a hard time remembering this pmf. Is it <span class="math inline">\(x^\lambda\)</span> or <span class="math inline">\(\lambda^x\)</span> in the numerator? <span class="math inline">\(\lambda!\)</span> or <span class="math inline">\(x!\)</span> in the denominator? First, we need to think about what the Poisson distribution can model. We can think of the Poisson distribution as the number of independent events that occur in a given time period <span class="math inline">\([0, t]\)</span>. The mean number of events in <span class="math inline">\(\mu\)</span>. If we let <span class="math inline">\(Y\)</span> be the arrival <em>time</em> of the first event, then <span class="math inline">\(Y\)</span> is exponentially distributed with rate <span class="math inline">\(\lambda / t\)</span> or mean <span class="math inline">\(t / \lambda\)</span>.</p>
+<p>So, the first step to notice is that we have alignment between the distributions when <span class="math inline">\(P(X = 1 \mid \lambda) = \lambda \exp(- \lambda) = f(1 \mid \lambda)\)</span> . The key part to remember is that we have <span class="math inline">\(\exp(-\lambda)\)</span>. If you remember this then the rest of the pmf of the Poisson distribution is easy to remember. Since this is a pmf, it needs to sum to 1 over all <span class="math inline">\(0,1,\ldots\)</span> We have <span class="math display">\[
+\begin{aligned}
+\sum_{i = 0}^\infty P(X = i \mid \lambda) &amp;= 1\\
+\exp(-\lambda) \sum_{i = 0}^\infty g(x,\lambda) = 1\\
+\sum_{i = 0}^\infty g(x,\lambda) = \exp(\lambda)
+\end{aligned}
+\]</span></p>
+<p>Recalling from calculus, this is just the Taylor expansion of <span class="math inline">\(\exp(\lambda)\)</span> about zero:</p>
+<p><span class="math display">\[
+\exp(\lambda) = \sum_{i = 0}^\infty \frac{\lambda^i}{i!}
+\]</span></p>
+<p>So if you forget the pmf of the Poisson distribution or the Taylor expansion of <span class="math inline">\(\exp(\lambda)\)</span> , you can easy figure the other one.</p>
+</section>
+<section id="gamma-function-and-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="gamma-function-and-distribution">Gamma function and distribution</h2>
+<p>The gamma distribution is useful as a continuous distribution supported on the positive numbers. We end up using the Gamma function quite often in Bayesian statistics. A couple useful properties that can help us remember the form of the pdf:</p>
+<ul>
+<li>If <span class="math inline">\(X \sim \operatorname{Gamma}(1, \beta)\)</span> then <span class="math inline">\(X \sim \exp(\beta)\)</span> , that is:</li>
+</ul>
+<p><span class="math display">\[
+f(x | \beta) = \beta \exp(- x \beta)
+\]</span></p>
+<ul>
+<li>Scaling exponential: if <span class="math inline">\(X \sim \exp(\lambda)\)</span>, then <span class="math inline">\(c X \sim \exp(\lambda / c)\)</span></li>
+<li>If <span class="math inline">\(X_1, \ldots, X_n \overset{iid}{\sim} \exp(\lambda)\)</span> , then <span class="math inline">\(\sum_{i} X_i \sim \operatorname{Gamma}(n, \lambda)\)</span></li>
+<li>Gamma is the conjugate prior for the rate parameter for the Poisson distribution.
+<ul>
+<li>If <span class="math inline">\(x | \lambda \sim \operatorname{Poisson}(\lambda)\)</span> and <span class="math inline">\(\lambda \sim \operatorname{Gamma}(\alpha, \beta)\)</span> , then, <span class="math inline">\(\lambda | x \sim \operatorname{Gamma}\)</span></li>
+<li>The actual parameters are not so important for this demonstration</li>
+</ul></li>
+<li>Gamma is the conjugate prior for the precision parameters for a normal distribution with known <span class="math inline">\(\mu\)</span>.
+<ul>
+<li>This one is particularly useful if you remember the form of the normal distribution and view it as a function of <span class="math inline">\(\tau = \sigma^{-1}\)</span> .</li>
+</ul></li>
+</ul>
+<p>Gamma distribution: If <span class="math inline">\(X \sim \operatorname{Gamma}(\alpha,\beta)\)</span>, then, <span class="math display">\[
+f(x \mid \alpha, \beta) = \frac{\beta^\alpha}{\Gamma({\alpha})}x^{\alpha - 1} \exp(- \beta x)
+\]</span></p>
+<p>Since we know that <span class="math inline">\(\int_{0}^\infty f(x \mid \alpha, \beta) = 1\)</span>, then, <span class="math display">\[
+\begin{aligned}
+1 = \frac{\beta^\alpha}{\Gamma({\alpha})} \int_{0}^\infty x^{\alpha - 1} \exp(- \beta x)\, dx\\
+\int_{0}^\infty x^{\alpha - 1} \exp(- \beta x)\, dx = \frac{\Gamma(\alpha)}{\beta^\alpha}
+\end{aligned}
+\]</span> This integral comes up frequently in Bayesian statistics and is useful to quickly remember the form. In the case when <span class="math inline">\(\beta = 1\)</span>, then we have the standard Gamma function <span class="math display">\[
+{\displaystyle \Gamma (\alpha)=\int _{0}^{\infty }x^{\alpha-1}\exp(-x){\text{ d}}x}
+\]</span></p>
+<p>I’ll admit that that it is a bit more difficult to recall the normalizing constant in the gamma distribution but if we can remember the gamma function then a simple substitution will give us the constant we desire.</p>
+<p>The integral of the form: <span class="math display">\[
+\int_0^\infty t^{\alpha - 1} \exp (- \beta t)\, dt
+\]</span> Can be solved by making the substitution <span class="math inline">\(u = \beta t\)</span>. Then, <span class="math inline">\(\frac{1}{\beta} du = dt\)</span> and <span class="math display">\[
+\begin{aligned}
+\int_0^\infty \left(u/\beta\right)^{\alpha-1} \exp(-u) \frac{1}{\beta} \, du &amp;= \frac{1}{\beta^{\alpha}}\int_0^\infty u^{\alpha-1} \exp(-u)\, du\\
+&amp;= \frac{\Gamma(\alpha)}{\beta^{\alpha}}
+\end{aligned}
+\]</span> This is the inverse of the normalizing constant we need for the gamma distribution.</p>
+</section>
+<section id="normal-distribution-and-gaussian-integral" class="level2">
+<h2 class="anchored" data-anchor-id="normal-distribution-and-gaussian-integral">Normal distribution and Gaussian integral</h2>
+<p>The heart of the normal distribution is the term <span class="math display">\[
+f(x) = \exp(-x^2)
+\]</span></p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="2023-10-14_common_pdf_pmf_integrals_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>This gives us the bell-shaped characteristic. Solving <span class="math inline">\(\int_{-\infty}^\infty f(x) = \int_{-\infty}^\infty \exp(-x^2)\)</span> is a great exercise in calculus using a neat transformation to polar coordinates. After studying statistics or probability theory for a while you may find it easier to remember the normal distribution with normalizing constant easier than the Gaussian integral.</p>
+<p>Take the simplest normal distribution, <span class="math inline">\(\mu = 0\)</span> and <span class="math inline">\(\sigma^2 = 1\)</span> . We can probably remember <span class="math display">\[
+f(x \mid \mu = 0, \sigma^2 = 1) = \frac{1}{\sqrt{2\pi}} \exp\left(- \frac{1}{2} x^2\right)
+\]</span> We know that this need to integrate to 1 since it is a pdf: <span class="math display">\[
+\begin{aligned}
+1 = \int_{-\infty}^\infty f(x \mid \mu = 0, \sigma^2 = 1) &amp;= \frac{1}{\sqrt{2\pi}} \int_{-\infty}^\infty \exp\left(- \frac{1}{2} x^2\right)\, dx\\
+\int_{-\infty}^\infty \exp\left(- \frac{1}{2} x^2\right)\, dx &amp; = \sqrt{2 \pi}
+\end{aligned}
+\]</span> If we remember the form of the general normal distribution for parameters <span class="math inline">\(\mu, \sigma^2\)</span>: <span class="math display">\[
+f(x \mid \mu, \sigma) = \frac{1}{\sigma \sqrt{2\pi}} \exp\left(- \frac{1}{2}(x - \mu)^2\right)
+\]</span> is is easy to see that if we let <span class="math inline">\(\sigma^2 = 1/2\)</span> , then,</p>
+<p><span class="math display">\[
+\begin{aligned}
+1 &amp;= \frac{1}{\sqrt{\pi}} \int_{-\infty}^\infty \exp(- x^2)\\
+\int_{-\infty}^\infty \exp(- x^2) &amp;= \sqrt{\pi}
+\end{aligned}
+\]</span></p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Many of these tips are circular in nature but I find it easier to remember different parts of the circle at different times. Connecting different aspects of your learning is important to remembering. On a side note, one upside to the artificially simple world of conjugate priors is that many of these calculations help to remember distributions and the connection between them.</p>
+</section>
+<section id="normal-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="normal-distribution">Normal Distribution</h2>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
