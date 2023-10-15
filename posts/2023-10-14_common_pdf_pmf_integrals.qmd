@@ -147,7 +147,3 @@ $$
 
 ## Conclusion
 Many of these tips are circular in nature but I find it easier to remember different parts of the circle at different times. Connecting different aspects of your learning is important to remembering. On a side note, one upside to the artificially simple world of conjugate priors is that many of these calculations help to remember distributions and the connection between them.
-
-
-## Normal Distribution
-
