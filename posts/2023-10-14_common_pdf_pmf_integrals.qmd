@@ -13,7 +13,6 @@ output:
     fig_height: 5
 link-citations: true
 csl: ../static/bibtex/acm-sig-proceedings.csl
-draft: true
 ---
 
 ```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
