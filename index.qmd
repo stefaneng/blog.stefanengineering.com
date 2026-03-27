@@ -2,7 +2,7 @@
 title: "Stefan Eng"
 image: profile.jpg
 about:
-  template: trestles
+  template: jolla
   links:
     - text: "Google Scholar"
       href: https://scholar.google.com/citations?user=JGttqjsAAAAJ&hl=en
@@ -16,4 +16,5 @@ about:
       href: https://www.linkedin.com/in/stefaneng13/
 ---
 
-I'm a Ph.D student in Biostatistics at the University of Michigan working with [Dr. Jean Morrison](https://sph.umich.edu/faculty-profiles/morrison-jean.html) and [Dr. Veera Baladandayuthapani](https://sph.umich.edu/faculty-profiles/baladandayuthapani-veerabhadran.html).
+I'm a Ph.D student in Biostatistics at the University of Michigan.
+Sometimes I like to run for a really long time.
