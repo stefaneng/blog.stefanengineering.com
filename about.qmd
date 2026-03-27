@@ -1,16 +1,19 @@
 ---
-title: "About"
+title: "Stefan Eng"
 image: profile.jpg
 about:
   template: jolla
   links:
-    - icon: linkedin
-      text: LinkedIn
-      href: https://linkedin.com
+    - text: "Google Scholar"
+      href: https://scholar.google.com/citations?user=JGttqjsAAAAJ&hl=en
+    - text: "ORCID"
+      href: https://orcid.org/0000-0002-5245-6507
     - icon: github
-      text: Github
-      href: https://github.com
-
+      text: "GitHub"
+      href: https://github.com/stefaneng
+    - icon: linkedin
+      text: "LinkedIn"
+      href: https://www.linkedin.com/in/stefaneng13/
 ---
 
 I'm a Ph.D student in Biostatistics at the University of Michigan.

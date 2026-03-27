@@ -7,7 +7,6 @@ website:
   title: "Stefan Eng"
   navbar:
     right:
-      - about.qmd
       - icon: github
         href: https://github.com/stefaneng
       - icon: linkedin
@@ -16,7 +15,5 @@ format:
   html:
     theme: lux
     css: styles.css
-execute:
-  freeze: auto
 editor: source
 

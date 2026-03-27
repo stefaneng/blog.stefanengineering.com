@@ -1,12 +1,20 @@
 ---
-title: "stefanengineering.com"
-listing:
-  contents: posts
-  sort: "date desc"
-  type: default
-  categories: true
-  sort-ui: false
-  filter-ui: false
-page-layout: full
-title-block-banner: true
+title: "Stefan Eng"
+image: profile.jpg
+about:
+  template: trestles
+  links:
+    - text: "Google Scholar"
+      href: https://scholar.google.com/citations?user=JGttqjsAAAAJ&hl=en
+    - text: "ORCID"
+      href: https://orcid.org/0000-0002-5245-6507
+    - icon: github
+      text: "GitHub"
+      href: https://github.com/stefaneng
+    - icon: linkedin
+      text: "LinkedIn"
+      href: https://www.linkedin.com/in/stefaneng13/
 ---
+
+I'm a Ph.D student in Biostatistics at the University of Michigan.
+Sometimes I like to run for a really long time.
