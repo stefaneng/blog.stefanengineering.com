@@ -1,1 +1,8 @@
-/* css styles */
+/* Academic webpage styles */
+body {
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.about-links .btn {
+  margin: 0.2em 0.3em;
+}
